@@ -303,3 +303,21 @@ export function buildShelf(specs: ShelfBookSpec[]): ShelfParts {
     },
   };
 }
+
+/**
+ * The library wall is a picture (see src/wall), so there is no 3D room to build: only where each of our six stands,
+ * in the same world coordinates, so the real book can be lifted out of the exact place the picture shows it.
+ * Nothing stands proud on the wall plate (the page draws the glow), so `highlight` is ignored here.
+ */
+export function wallShelf(specs: ShelfBookSpec[]): ShelfParts {
+  const s = BOOK_SCALE;
+  const widths = specs.map((b) => bookThickness(b.pageCount) * s);
+  const total = widths.reduce((a, w) => a + w, 0) + SHELF.gap * (specs.length - 1);
+  let cursor = -total / 2;
+  const slots: Slot[] = specs.map((_, i) => {
+    const slot: Slot = { x: cursor, y: SHELF.row + SHELF.bookH / 2, z: SHELF.front + SHELF_Z, w: widths[i]! };
+    cursor += widths[i]! + SHELF.gap;
+    return slot;
+  });
+  return { group: new THREE.Group(), slots, setHidden() {}, update() {}, labelsReady: Promise.resolve(), dispose() {} };
+}

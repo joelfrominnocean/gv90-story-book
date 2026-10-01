@@ -44,7 +44,7 @@ When creative sign off copy, edit the string in `content.json`, change `source` 
 
 ## How it reads
 
-**The library** is a big built-in bookcase with a fireplace set into it, in the 3D version (a plain list in the 2D one). Our six books stand among rows of dim background books, each with a warm halo so you know which to pick; the newest unlocked one stands slightly proud with the two-line lamp on the board in front. A sealed book wears a plain paper band with its unlock date. Tap a book: it lifts off the shelf, turns to face you, the room dims, and it opens. **Library** puts it back. **A book is a run of pages and nothing
+**The library** is a whole bookcase wall you drag along, with a fireplace as the small bay in the middle, in the 3D version (a plain list in the 2D one; see "The library wall" below). Our six books stand among rows of dim background books, each with a warm glow so you know which to pick. A sealed book wears a plain paper band with its unlock date. Tap a book: it lifts off the shelf, turns to face you, the room dims, and it opens. **Library** puts it back. **A book is a run of pages and nothing
 scrolls**: the opener (title, hero, hotspots), then one brief bullet per page (two only when both are very short), then a closing
 page with the quiet CTA. The prologue is its three still frames. `src/book/pages.ts` decides the pages (`PAIR_MAX_CHARS`);
 copy is never reworded or split. Text is sized to fit each page (`src/book/layout.ts`), down to a 320×568 phone. A sealed book
@@ -75,7 +75,30 @@ In dev, `window.__book` exposes the rig. `__book.rig.frozen = true` plus setting
 
 2D fallback: same pages, same navigation, crossfade between pages. three.js is not even downloaded in that mode.
 
-### The room (`shelf.ts`, `fire.ts`)
+### The library wall (`src/wall`) – the default library
+
+The library is **one wide picture of a whole bookcase wall** (7.2 units across, three bays) with the fireplace as the small middle bay
+and the six books on the shelf above it. It is a Blender render built from CC0 textures (Poly Haven, ambientCG), larger than the
+screen: **drag (or pinch, or arrow keys) to look along it**, or tap **Whole wall** to see all of it. It opens on the six books and the fire.
+
+- **Fire**: real footage, set into the fireplace and blended with `screen` (black in the footage is the dark of the firebox), plus a warm
+  light that spills out and flickers (`.wall__spill`). It stops while a book is down. The clip is silent; the crackle is still synthesised.
+- **Glow and bands**: drawn by the page, not baked, because they change with the date: warm glow on open chapters, a fainter cool one on
+  sealed ones, and a paper band with the unlock date on each sealed book.
+- **Taking a book down**: the page zooms the picture until the book is `WALL_BOOK_FRAC` of the screen tall and centred (`src/wall/focus.ts`);
+  the 3D camera looks at the same book from the distance that makes it that size, so the real book stands exactly where the picture shows it.
+  The real book wears a crop of the picture's own spine for its first moments (`src/wall/image.ts`), and the picture swaps to a patch of the
+  shelf with that book missing (`patch-N.webp`), so nothing pops. Putting it back reverses all of it.
+- **Rebuilding it**: `zsh scripts/blender/render_wall.sh` (about 3 minutes on an M-series Mac), then `node scripts/make-wall-assets.mjs`
+  (WebP files into `public/assets/room/` and `src/wall/layout.json`, which holds where every spine and the fire opening sit). The scene is
+  `scripts/blender/library_hero.py` with `WALL=1`; it also renders the old tight shot without it. The fire loop is `zsh scripts/make-fire-loop.sh`.
+- **If it is missing or fails to load**, the 3D shelf below is used instead (build flags `__HAS_WALL__`, `__HAS_FIRE_VIDEO__`).
+
+**Fire footage credit and licence:** "Burning Logs in a Fireplace" by Brixiv, [Pexels](https://www.pexels.com/video/burning-logs-in-a-fireplace-7091442/),
+used under the Pexels licence (free to use, no attribution required, but not to be redistributed as it was). Only a cropped, re-timed 12-second
+loop (`public/assets/room/fire.mp4`, 2MB) ships; the 49MB original stays in `assets-src/fire/` and is not committed. The clip's own audio track is silent.
+
+### The 3D shelf (`shelf.ts`, `fire.ts`) – the fallback room
 
 Everything is procedural: timber from canvas grain, the background books as one instanced mesh, the moon jar as a lathe,
 the flame as a noise shader (three layers, so it licks and never loops) with rising sparks and a flickering warm light.

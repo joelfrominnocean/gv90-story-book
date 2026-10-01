@@ -5,7 +5,9 @@ import type { Insets } from "../book/layout";
 import { buildBook, type BookParts } from "./buildBook";
 import { FOV } from "./constants";
 import { BookRig, bookThickness, cameraPose, closedPose, ease, lerp, lerpPose, libraryPose, smooth, type Pose } from "./rig";
-import { BOOK_SCALE, buildShelf, type ShelfBookSpec } from "./shelf";
+import { WALL_BOOK_FRAC, WALL_BOOK_H } from "../wall/focus";
+import { cropSpine } from "../wall/image";
+import { BOOK_SCALE, buildShelf, wallShelf, type ShelfBookSpec } from "./shelf";
 import { createBookTextures, type BookTextures, type DrawPage } from "./textures";
 
 export interface SelectedBook {
@@ -42,6 +44,10 @@ export interface StageProps {
   onSettled: () => void;
   /** Fired once, when the shelf is drawn and the first frame is up. */
   onReady: () => void;
+  /** The library is the wall picture (src/wall): no 3D room, just the real book lifted out of its slot in the picture. */
+  wall?: boolean;
+  /** Fired when the real book has been drawn in its slot, so the picture can show that slot empty. */
+  onLifted?: (n: number) => void;
 }
 
 const HALF_FOV = Math.tan(((FOV / 2) * Math.PI) / 180);
@@ -64,9 +70,9 @@ interface Active {
   pagesDrawn: boolean;
 }
 
-function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, onReady }: StageProps) {
+function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, onReady, wall = false, onLifted }: StageProps) {
   const { invalidate, size } = useThree();
-  const shelf = useMemo(() => buildShelf(books), [books]);
+  const shelf = useMemo(() => (wall ? wallShelf(books) : buildShelf(books)), [books, wall]);
   const wrap = useMemo(() => new THREE.Group(), []);
   const curtainMat = useMemo(() => new THREE.MeshBasicMaterial({ color: 0x0d0c0a, transparent: true, opacity: 0, depthWrite: false }), []);
 
@@ -80,6 +86,10 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
   const dispose = useRef(false);
+  const lastN = useRef(0);
+  const liftedFor = useRef(-1);
+  const onLiftedRef = useRef(onLifted);
+  onLiftedRef.current = onLifted;
 
   const amb = useRef<THREE.AmbientLight>(null);
   const key = useRef<THREE.DirectionalLight>(null);
@@ -114,6 +124,7 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
 
   // Where the spines are on screen, for the buttons over them.
   useEffect(() => {
+    if (wall) return;
     const cam = new THREE.PerspectiveCamera(FOV, size.width / size.height, 0.05, 40);
     place(cam, libraryPose(size.width / size.height));
     cam.updateMatrixWorld();
@@ -134,7 +145,7 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
         return { x: x0, y: y0, w: Math.max(...xs) - x0, h: Math.max(...ys) - y0 };
       }),
     );
-  }, [shelf, size.width, size.height, onRects]);
+  }, [shelf, size.width, size.height, onRects, wall]);
 
   // Take a book down, or put it back.
   useEffect(() => {
@@ -149,10 +160,11 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
         }
         const n = selected.pages.length;
         const tex = createBookTextures({ pageCount: n, coverTitle: selected.title, mode: selected.mode, accent: selected.accent, thickness: bookThickness(selected.pageCount) });
-        const parts = buildBook(tex, { n, accent: selected.accent, thickFor: selected.pageCount, leaves: true, coverDetail: true, castShadow: false });
+        const parts = buildBook(tex, { n, accent: selected.accent, thickFor: selected.pageCount, leaves: true, coverDetail: true, castShadow: false, spineCrop: wall ? cropSpine(selected.n) : null });
         const rig = new BookRig(n);
         rig.snap(-1);
         wrap.add(parts.group);
+        lastN.current = selected.n;
         content.current = Array.from({ length: n }, () => 1);
         active.current = { n: selected.n, tex, parts, rig, pagesDrawn: false };
         shelf.setHidden(selected.n);
@@ -210,6 +222,8 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
         wrap,
         invalidate,
         force: undefined,
+        /** Dev only: freeze the take-down at its first frame, to inspect the hand-off from the wall picture. */
+        hold: false,
       };
     }
   }, [shelf, wrap, invalidate]);
@@ -218,6 +232,7 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
     const now = performance.now();
     const dt = Math.min(delta, 0.05);
     const st = stage.current;
+    if (import.meta.env.DEV && (window as unknown as { __book?: { hold?: boolean } }).__book?.hold) st.start = now;
     if (st.active) {
       const t = (now - st.start) / TAKE_DOWN_MS;
       if (t >= 1) {
@@ -229,7 +244,14 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
     const uu = st.v;
     const aspect = size.width / size.height;
     const a = active.current;
-    let pose: Pose = libraryPose(aspect);
+    // The library camera. On the wall it looks square-on at the book being taken down, from the distance that makes the book
+    // WALL_BOOK_FRAC of the screen tall: the same view the page has zoomed the picture to.
+    let libP: Pose = libraryPose(aspect);
+    if (wall) {
+      const sl = shelf.slots[lastN.current]!;
+      libP = { tx: sl.x + sl.w / 2, ty: sl.y, tz: sl.z, az: 0, polar: 0, visH: WALL_BOOK_H / WALL_BOOK_FRAC };
+    }
+    let pose: Pose = libP;
 
     if (a) {
       busy = a.rig.update(now, dt) || busy;
@@ -243,6 +265,8 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
         content.current[c] = next;
       });
       a.parts.shadowScale = smooth(uu);
+      // The spine starts as the picture of itself and turns into lit cloth as the book comes off the shelf.
+      a.parts.setSpineCrop(1 - smooth(clamp01(uu / 0.22)));
       a.parts.apply(a.rig, content.current);
 
       // Lift the book off its shelf, turn it to face you, and bring it forward.
@@ -255,8 +279,13 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
 
       const reading = Math.min(a.rig.n - 1, Math.max(0, shown.current.view));
       const bookPose = cameraPose(a.rig.leaves[0]!.p, a.rig.pull, aspect, a.parts.stack.zRight(reading));
-      pose = lerpPose(libraryPose(aspect), bookPose, smooth(uu));
-    } else if (uu > 0) pose = lerpPose(libraryPose(aspect), closedPose(aspect), smooth(uu));
+      pose = lerpPose(libP, bookPose, smooth(uu));
+      if (liftedFor.current !== a.n) {
+        liftedFor.current = a.n;
+        const n = a.n;
+        requestAnimationFrame(() => onLiftedRef.current?.(n));
+      }
+    } else if (uu > 0) pose = lerpPose(libP, closedPose(aspect), smooth(uu));
 
     place(state.camera as THREE.PerspectiveCamera, pose);
 
@@ -264,7 +293,7 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
     const lib = 1 - smooth(uu);
     curtainMat.opacity = smooth(clamp01((uu - 0.12) / 0.55));
     // The fire never stops while the library is up: it is the room's light. It rests while a book is down.
-    if (lib > 0.01) {
+    if (lib > 0.01 && !wall) {
       shelf.update(now / 1000, dt, uu);
       busy = true;
     }
@@ -299,6 +328,7 @@ function Scene({ books, selected, view, insets, htmlShown, onRects, onSettled, o
       active.current.parts.dispose();
       active.current.tex.dispose();
       active.current = null;
+      liftedFor.current = -1;
       shelf.setHidden(null);
       busy = true;
     }

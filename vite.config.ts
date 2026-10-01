@@ -14,6 +14,9 @@ export default defineConfig({
   define: {
     __HAS_STILLS__: JSON.stringify(has("public/assets/stills/dba-1-lamps.jpg")),
     __HAS_FIRE_TEXTURE__: JSON.stringify(has("public/assets/fire/flame.webp")),
+    // The library wall (a Blender render of the room) and the fire footage that plays in its fireplace.
+    __HAS_WALL__: JSON.stringify(has("public/assets/room/wall.webp")),
+    __HAS_FIRE_VIDEO__: JSON.stringify(has("public/assets/room/fire.mp4")),
   },
   plugins: [react()],
   server: { host: true, port: 5173, strictPort: true },

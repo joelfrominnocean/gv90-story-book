@@ -193,6 +193,16 @@
         "source": "generated",
         "ref": "Build Brief › Experience (video)"
       },
+      "wallOverview": {
+        "text": "Whole wall",
+        "source": "generated",
+        "ref": "Library wall (extension): button that zooms out to the whole bookcase"
+      },
+      "wallFocus": {
+        "text": "The six books",
+        "source": "generated",
+        "ref": "Library wall (extension): button that zooms back in on the six books"
+      },
       "prevChapter": {
         "text": "Previous chapter",
         "source": "generated",

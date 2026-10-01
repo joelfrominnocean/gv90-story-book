@@ -161,6 +161,6 @@ export type Content = z.output<typeof Content>;
 export const REQUIRED_UI_KEYS = [
   "begin", "loading", "eyebrowChapter", "eyebrowPrologue", "eyebrowEpilogue", "sealed", "opensOn", "dateTbc",
   "watch", "play", "pause", "close", "captionsOn", "captionsOff", "tapForSound", "soundOn", "soundOff",
-  "prevChapter", "nextChapter", "railLabel", "videoLabel", "library", "pageOf", "prevPage", "nextPage",
+  "prevChapter", "nextChapter", "railLabel", "videoLabel", "library", "pageOf", "prevPage", "nextPage", "wallOverview", "wallFocus",
 ] as const;
 export type UiKey = (typeof REQUIRED_UI_KEYS)[number];

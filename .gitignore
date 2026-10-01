@@ -17,3 +17,7 @@ assets-src/
 # to labelled placeholders and the procedural flame without them. To publish them: `git add -f public/assets/stills public/assets/fire`.
 public/assets/stills/
 public/assets/fire/
+
+# Blender renders and scene caches are working files, not for the repo
+renders/
+waveletNoiseTile.bin

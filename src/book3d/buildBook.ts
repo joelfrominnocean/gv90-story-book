@@ -10,6 +10,8 @@ export interface BookParts {
   shadowScale: number;
   /** Pose every part from the rig's current state. `content[c]` (0..1) fades page c's print on its leaf. */
   apply(rig: BookRig, content: number[]): void;
+  /** 0..1: how much of the spine is still the picture of it (see BuildOptions.spineCrop). 0 when there is none. */
+  setSpineCrop(opacity: number): void;
   dispose(): void;
 }
 
@@ -23,6 +25,8 @@ export interface BuildOptions {
   /** False skips what you only see from the cover side (cover label, lamp lines). */
   coverDetail?: boolean;
   castShadow?: boolean;
+  /** A crop of the library picture at this book's spine. It covers the spine, unlit, until `setSpineCrop` fades it out. */
+  spineCrop?: THREE.Texture | null;
 }
 
 const std = (map: THREE.Texture, side: THREE.Side = THREE.FrontSide) =>
@@ -74,7 +78,7 @@ function makeLeaf(front: THREE.Material, overlay: THREE.Material, back: THREE.Ma
  * pages stack in +Z. The same model is the book on the shelf and the book you read.
  */
 export function buildBook(tex: BookTextures, opts: BuildOptions): BookParts {
-  const { n, accent, thickFor, leaves: withLeaves = true, coverDetail = true, castShadow = false } = opts;
+  const { n, accent, thickFor, leaves: withLeaves = true, coverDetail = true, castShadow = false, spineCrop = null } = opts;
   const stack = new Stack(n, thickFor);
   const group = new THREE.Group();
   const disposables: { dispose(): void }[] = [];
@@ -217,6 +221,17 @@ export function buildBook(tex: BookTextures, opts: BuildOptions): BookParts {
   spineSlip.position.set(-0.0135, 0, total / 2);
   group.add(spineSlip);
 
+  // The picture's own spine over all of it, unlit, so the swap from picture to book cannot be seen.
+  let cropMat: THREE.MeshBasicMaterial | null = null;
+  if (spineCrop) {
+    cropMat = track(new THREE.MeshBasicMaterial({ map: spineCrop, transparent: true, opacity: 1, depthWrite: false }));
+    track(spineCrop);
+    const crop = new THREE.Mesh(track(new THREE.PlaneGeometry(total, PAGE_H)), cropMat);
+    crop.rotation.y = -Math.PI / 2;
+    crop.position.set(-0.0155, 0, total / 2);
+    group.add(crop);
+  }
+
   const parts: BookParts = {
     group,
     stack,
@@ -276,6 +291,11 @@ export function buildBook(tex: BookTextures, opts: BuildOptions): BookParts {
       shadowMat.opacity = 0.9 * parts.shadowScale;
       // The lamp only glows while the cover is up.
       if (glowMat) glowMat.opacity = 0.9 * (1 - smooth(Math.min(1, pc * 2.2)));
+    },
+    setSpineCrop(opacity) {
+      if (!cropMat) return;
+      cropMat.opacity = opacity;
+      cropMat.visible = opacity > 0.003;
     },
     dispose() {
       disposables.forEach((d) => d.dispose());

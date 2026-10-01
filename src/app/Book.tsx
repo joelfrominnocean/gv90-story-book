@@ -15,6 +15,8 @@ import { PageView } from "../components/PageView";
 import { SealedPage } from "../components/SealedPage";
 import { TopBar } from "../components/TopBar";
 import { VideoPlayer } from "../components/VideoPlayer";
+import { WallOverlay } from "../wall/WallOverlay";
+import { WallPlate, type WallPlateHandle } from "../wall/WallPlate";
 import { content, fill, ui, unlockState, type Chapter, type Hotspot } from "../content";
 import { FireSound } from "./fireSound";
 import { detect3d } from "./mode3d";
@@ -46,7 +48,19 @@ export function Book({ route }: { route: Route }) {
   const scene3d = use3d && !sceneFailed;
 
   const initial = route.chapter !== null && route.chapter < COUNT ? route.chapter : null;
+  // The library is a wide picture of the whole wall (src/wall) when it is built in and 3D is on; the 3D shelf is the fallback.
+  const [wallFailed, setWallFailed] = useState(false);
+  const [wallLoaded, setWallLoaded] = useState(false);
+  const wall = scene3d && __HAS_WALL__ && !wallFailed;
+  const [focusN, setFocusN] = useState<number | null>(use3d && __HAS_WALL__ ? initial : null);
+  const [patchN, setPatchN] = useState<number | null>(null);
+  const [bookDown, setBookDown] = useState(false);
+  const [zoomedOut, setZoomedOut] = useState(false);
+  const plateRef = useRef<WallPlateHandle>(null);
+  const pendingOpen = useRef<number | null>(null);
   const [chapterIdx, setChapterIdx] = useState<number | null>(initial);
+  const chapterIdxRef = useRef(chapterIdx);
+  chapterIdxRef.current = chapterIdx;
   const [page, setPage] = useState(-1);
   const [leaving, setLeaving] = useState(false);
   const [sheet, setSheet] = useState<{ chapter: Chapter; hotspot: Hotspot } | null>(null);
@@ -58,6 +72,7 @@ export function Book({ route }: { route: Route }) {
   const bookRef = useRef<HTMLDivElement>(null);
   const size = useElementSize(bookRef);
   const insets = useMemo(readInsets, []);
+  const wallSize = useMemo(() => ({ width: size.vw, height: size.vh }), [size.vw, size.vh]);
   const fontsReady = useFontsReady();
 
   const returnFocus = useRef<HTMLElement | null>(null);
@@ -132,6 +147,12 @@ export function Book({ route }: { route: Route }) {
   const onSettled = useCallback(() => {
     window.clearTimeout(turnGuard.current);
     setTurning(false);
+    if (chapterIdxRef.current !== null) setBookDown(true);
+    else {
+      // The book is back in its place: the picture shows it again, and the wall is free to look around.
+      setPatchN(null);
+      setFocusN(null);
+    }
   }, []);
   const onReady = useCallback(() => setSceneReady(true), []);
 
@@ -155,10 +176,11 @@ export function Book({ route }: { route: Route }) {
   const goRef = useRef(go);
   goRef.current = go;
 
-  const openBook = useCallback(
+  const beginOpen = useCallback(
     (c: number) => {
       window.clearTimeout(autoTimer.current);
       setLeaving(false);
+      setBookDown(false);
       setSheet(null);
       setVideo(null);
       setTurning(false);
@@ -173,6 +195,23 @@ export function Book({ route }: { route: Route }) {
     [scene3d, sceneReady, startMove],
   );
 
+  // On the wall, a pick first zooms the picture to the view the 3D camera will use; the book comes down once that is done.
+  const openBook = useCallback(
+    (c: number) => {
+      if (!wall) return beginOpen(c);
+      pendingOpen.current = c;
+      setSheet(null);
+      setVideo(null);
+      setFocusN(c);
+    },
+    [wall, beginOpen],
+  );
+  const onFocused = useCallback(() => {
+    const c = pendingOpen.current;
+    pendingOpen.current = null;
+    if (c !== null) beginOpen(c);
+  }, [beginOpen]);
+
   const toLibrary = useCallback(() => {
     window.clearTimeout(autoTimer.current);
     setLeaving(false);
@@ -182,6 +221,11 @@ export function Book({ route }: { route: Route }) {
     setPage(-1);
     // The 3D stage puts the book back on its shelf; the shelf waits until it has.
     if (scene3d && sceneReady) startMove();
+    else {
+      setPatchN(null);
+      setFocusN(null);
+    }
+    setBookDown(false);
     setChapterIdx(null);
     writeRoute(null, null);
   }, [scene3d, sceneReady, startMove]);
@@ -263,6 +307,24 @@ export function Book({ route }: { route: Route }) {
 
   return (
     <div ref={bookRef} className="book" data-mode={chapter && page >= 0 ? chapter.theme.mode : "ink"} data-3d={scene3d && sceneReady ? "on" : "off"} style={style}>
+      {wall && (
+        <WallPlate
+          ref={plateRef}
+          size={wallSize}
+          books={shelfBooks}
+          labels={shelfLabels}
+          busy={turning || !sceneReady || chapterIdx !== null}
+          focusN={focusN}
+          patchN={patchN}
+          paused={bookDown}
+          reduceMotion={reduceMotion}
+          onPick={openBook}
+          onFocused={onFocused}
+          onLoaded={() => setWallLoaded(true)}
+          onFailed={() => setWallFailed(true)}
+          onZoomedOut={setZoomedOut}
+        />
+      )}
       {scene3d && (
         <div className={`book3d${sceneReady ? " is-ready" : ""}`} aria-hidden="true">
           <SceneBoundary onError={() => setSceneFailed(true)}>
@@ -276,18 +338,24 @@ export function Book({ route }: { route: Route }) {
                 onRects={setRects}
                 onSettled={onSettled}
                 onReady={onReady}
+                wall={wall}
+                onLifted={setPatchN}
               />
             </Suspense>
           </SceneBoundary>
         </div>
       )}
 
-      <div className="stage" data-turning={turning} inert={overlayOpen} onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
+      <div className="stage" data-turning={turning} data-wall={wall && !chapter} inert={overlayOpen} onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
         {chapter && page >= 0 && <TopBar page={page} total={pages.length} onLibrary={leave} />}
 
         {!chapter ? (
           scene3d ? (
-            <LibraryOverlay rects={sceneReady ? rects : []} labels={shelfLabels} busy={turning} sound={sound} onSound={toggleSound} onOpen={openBook} />
+            wall ? (
+              wallLoaded && <WallOverlay sound={sound} onSound={toggleSound} zoomedOut={zoomedOut} onZoom={() => plateRef.current?.toggleZoom()} />
+            ) : (
+              <LibraryOverlay rects={sceneReady ? rects : []} labels={shelfLabels} busy={turning} sound={sound} onSound={toggleSound} onOpen={openBook} />
+            )
           ) : (
             <Library preview={route.preview} onOpen={openBook} />
           )
