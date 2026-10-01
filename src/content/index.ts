@@ -9,7 +9,13 @@ export function loadContent(): Content {
   const parsed = Content.parse(raw);
   // Point every file path at the right base (a sub-path on GitHub Pages).
   for (const ch of parsed.chapters) {
-    for (const h of ch.heroes) if (h.src) h.src = asset(h.src);
+    for (const h of ch.heroes) {
+      if (h.src && h.status === "from-brief" && !__HAS_STILLS__) {
+        // The stills from the brief are not in the public repo: show the labelled placeholder, never a broken image.
+        h.src = null;
+        h.status = "placeholder";
+      } else if (h.src) h.src = asset(h.src);
+    }
     if (ch.video) {
       if (ch.video.sources.mp4) ch.video.sources.mp4 = asset(ch.video.sources.mp4);
       if (ch.video.sources.webm) ch.video.sources.webm = asset(ch.video.sources.webm);

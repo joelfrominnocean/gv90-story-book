@@ -173,23 +173,28 @@ export function buildFire(opts: { width: number; height: number; floorY: number;
   const photo = { mix: 0, loaded: false };
   const photoMats: { mat: THREE.ShaderMaterial; weight: number; phase: number }[] = [];
   // If the file is absent (it is not in the public repo), the procedural flame simply carries on alone.
-  const photoTex = new THREE.TextureLoader().load(
-    asset("/assets/fire/flame.webp"),
-    () => {
-      photo.loaded = true;
-    },
-    undefined,
-    () => undefined,
-  );
-  photoTex.colorSpace = THREE.SRGBColorSpace;
-  photoTex.wrapS = photoTex.wrapT = THREE.ClampToEdgeWrapping;
-  track(photoTex);
+  // The photo is not in the public repo, so there it is not even requested.
+  const photoTex = __HAS_FIRE_TEXTURE__
+    ? new THREE.TextureLoader().load(
+        asset("/assets/fire/flame.webp"),
+        () => {
+          photo.loaded = true;
+        },
+        undefined,
+        () => undefined,
+      )
+    : null;
+  if (photoTex) {
+    photoTex.colorSpace = THREE.SRGBColorSpace;
+    photoTex.wrapS = photoTex.wrapT = THREE.ClampToEdgeWrapping;
+    track(photoTex);
+  }
   const photoLayers: { size: number; x: number; zz: number; seed: number; flip: number; zoom: number; off: [number, number]; weight: number }[] = [
     { size: 0.7, x: -0.02, zz: -0.1, seed: 1.3, flip: 0, zoom: 1, off: [0, 0], weight: 1.0 },
     { size: 0.56, x: 0.07, zz: -0.05, seed: 4.1, flip: 1, zoom: 1, off: [0, 0], weight: 0.62 },
     { size: 0.42, x: -0.11, zz: -0.01, seed: 7.7, flip: 0, zoom: 0.62, off: [0.04, 0], weight: 0.5 },
   ];
-  photoLayers.forEach((l, i) => {
+  if (photoTex) photoLayers.forEach((l, i) => {
     const mat = track(
       new THREE.ShaderMaterial({
         vertexShader: flameVert,
