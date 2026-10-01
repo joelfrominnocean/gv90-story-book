@@ -1,0 +1,1160 @@
+/* ============ Book shell ============ */
+.book {
+  --accent: #bfd9d2;
+  position: relative;
+  margin-inline: auto;
+  width: min(100%, 30rem);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background-color 0.7s var(--ease-out), color 0.7s var(--ease-out);
+}
+@media (min-width: 768px) {
+  .book {
+    width: min(100%, 34rem);
+    box-shadow: 0 0 90px rgba(0, 0, 0, 0.55);
+  }
+}
+
+.book[data-mode="paper"] {
+  --bg: var(--hanji);
+  --fg: var(--ink);
+  --muted: #6a675f;
+  --rule: rgba(21, 19, 15, 0.22);
+  --paper-blend: multiply;
+  --paper-opacity: 0.5;
+}
+.book[data-mode="ink"] {
+  --bg: var(--ink);
+  --fg: #f3efe6;
+  --muted: #a8a59b;
+  --rule: rgba(243, 239, 230, 0.24);
+  --paper-blend: screen;
+  --paper-opacity: 0.035;
+}
+
+/* Hanji grain, laid over the whole page. Sits above content, below the rail and overlays. */
+.book::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: var(--hanji-texture);
+  mix-blend-mode: var(--paper-blend);
+  opacity: var(--paper-opacity);
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  touch-action: pan-y;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* Pages are sized to fit, so nothing scrolls. This is only a safety net for a tiny window. */
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-top: calc(var(--rail-h) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  animation: fade 0.7s var(--ease-out) both;
+}
+.page::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============ Chapter rail ============ */
+
+/* ============ Cover ============ */
+.cover {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0 var(--gutter);
+  text-align: center;
+  animation: fade 1.2s var(--ease-out) both;
+}
+.cover__body {
+  display: grid;
+  justify-items: center;
+  gap: 1.6rem;
+}
+.cover__title {
+  margin: 0.4rem 0 0;
+  font: 500 clamp(2.4rem, 11vw, 3.2rem) / 1.04 var(--serif);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.cover__begin {
+  margin-top: 1.4rem;
+}
+.begin {
+  padding: 0.75rem 0.4rem;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  font: italic 400 1.5rem/1 var(--serif);
+  transition: border-color 0.5s var(--ease-out);
+}
+.begin:hover,
+.begin:focus-visible {
+  border-color: var(--accent);
+}
+.cover__loading {
+  margin: 0.4rem 0 0;
+  font: 500 0.6875rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Five holes along the spine. Cover only. */
+.spine {
+  position: absolute;
+  left: 0;
+  top: 11%;
+  bottom: 11%;
+  width: 1.9rem;
+  pointer-events: none;
+}
+.spine::before {
+  content: "";
+  position: absolute;
+  left: 0.95rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--rule);
+}
+.spine i {
+  position: absolute;
+  left: 0.7rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: -0.28rem;
+  border: 1px solid var(--fg);
+  border-radius: 50%;
+  opacity: 0.55;
+}
+.spine i::after {
+  content: "";
+  position: absolute;
+  left: 0.5rem;
+  top: 0.18rem;
+  width: 0.9rem;
+  height: 1px;
+  background: var(--fg);
+  opacity: 0.8;
+}
+
+/* ============ Moon jar mark: one brush-like stroke ============ */
+.jar {
+  display: block;
+  width: 3.25rem;
+  height: 3.25rem;
+  color: var(--fg);
+}
+.jar--large {
+  width: 6.5rem;
+  height: 6.5rem;
+}
+.jar path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.jar--sealed path {
+  stroke-dasharray: 0.025 0.02;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .jar:not(.jar--sealed) path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 2.2s var(--ease-out) 0.2s forwards;
+  }
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ============ Two-line lamp: divider and loading indicator ============ */
+.lamps {
+  display: grid;
+  gap: 5px;
+  width: 7.5rem;
+}
+.lamps i {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent) 24%, var(--fg) 50%, var(--accent) 76%, transparent);
+  box-shadow: 0 0 9px var(--accent);
+}
+.lamps--dim {
+  opacity: 0.45;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lamps--loading i {
+    animation: lamp 1.5s var(--ease-out) infinite alternate;
+  }
+  .lamps--loading i:nth-child(2) {
+    animation-delay: 0.35s;
+  }
+}
+@keyframes lamp {
+  from {
+    opacity: 0.15;
+    transform: scaleX(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* ============ Chapter page ============ */
+.head {
+  padding: 3rem var(--gutter) 0;
+}
+.head .jar {
+  margin-bottom: 1.5rem;
+}
+.eyebrow {
+  margin: 0 0 0.9rem;
+  font: 500 0.6875rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.title {
+  margin: 0;
+  font: 500 clamp(2.4rem, 11.4vw, 3.1rem) / 1.02 var(--serif);
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+.epigraph {
+  margin: 1.1rem 0 0;
+  font: italic 400 1.4rem/1.3 var(--serif);
+  color: var(--muted);
+}
+
+/* ---- Hero ---- */
+.hero {
+  margin: 2.5rem 0 0;
+}
+.hero ~ .hero {
+  margin-top: 16vh;
+}
+.hero__frame {
+  position: relative;
+  overflow: hidden;
+}
+.hero--4x5 .hero__frame {
+  aspect-ratio: 4 / 5;
+  margin-inline: var(--gutter);
+}
+.hero--16x9 .hero__frame {
+  aspect-ratio: 16 / 9;
+}
+.hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Wide stills on ink pages dissolve into the page instead of sitting in a box. */
+.book[data-mode="ink"] .hero--16x9 .hero__frame {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+}
+
+/* ---- Placeholder frame ---- */
+.ph {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--fg) 9%, var(--bg));
+  border: 1px dashed var(--rule);
+}
+.ph__x {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.ph__x line {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+.ph__label {
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  max-width: 80%;
+  padding: 0.85rem 1rem;
+  background: var(--bg);
+  text-align: center;
+  font: 500 0.75rem/1.35 var(--sans);
+  color: var(--muted);
+}
+.ph__label b {
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+/* ---- Hotspots: small glowing points ---- */
+.hotspot {
+  position: absolute;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -1.375rem 0 0 -1.375rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+}
+.hotspot__dot {
+  position: absolute;
+  inset: 1rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1.5px rgba(21, 19, 15, 0.45), 0 0 0 4px rgba(255, 255, 255, 0.4), 0 0 16px 4px var(--accent);
+}
+.hotspot:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: -3px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hotspot__dot::after {
+    content: "";
+    position: absolute;
+    inset: -0.6rem;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    animation: ring 3.4s var(--ease-out) infinite;
+  }
+}
+@keyframes ring {
+  from {
+    transform: scale(0.55);
+    opacity: 0.95;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* ---- Watch line ---- */
+.watch,
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0;
+  border: 0;
+  background: none;
+  font: 500 0.75rem/1 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.watch {
+  margin: 1.4rem var(--gutter) 0;
+  color: var(--fg);
+}
+.watch__icon {
+  position: relative;
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+.watch__icon::before {
+  content: "";
+  position: absolute;
+  left: 0.72rem;
+  top: 0.58rem;
+  border-style: solid;
+  border-width: 0.36rem 0 0.36rem 0.58rem;
+  border-color: transparent transparent transparent currentColor;
+}
+
+/* ---- Beats: one thought per screen ---- */
+
+.pending {
+  display: inline-block;
+  padding: 0.7rem 0.85rem;
+  border: 1px dashed var(--rule);
+  border-radius: 3px;
+  font: 500 0.6875rem/1.45 var(--sans);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pending b {
+  color: var(--fg);
+  letter-spacing: 0.16em;
+}
+
+/* ---- CTA: a quiet inline line, not a button ---- */
+.cta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 14vh var(--gutter) 4vh;
+}
+.cta__line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  padding: 0.7rem 0 0.45rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--fg);
+  text-decoration: none;
+  font: italic 400 1.45rem/1.1 var(--serif);
+  transition: border-color 0.5s var(--ease-out);
+}
+.cta__line:hover,
+.cta__line:focus-visible {
+  border-color: var(--accent);
+}
+.cta__line--soon {
+  color: var(--muted);
+  border-bottom-style: dotted;
+}
+.cta__arrow {
+  width: 1.1rem;
+  height: 1px;
+  background: currentColor;
+  position: relative;
+  top: -0.3rem;
+}
+.cta__arrow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+
+/* ---- Sealed page ---- */
+.page--sealed {
+  display: grid;
+  place-items: center;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+}
+.sealed {
+  display: grid;
+  justify-items: start;
+  gap: 1.1rem;
+  width: 100%;
+  max-width: 27rem;
+  padding: 0 var(--gutter);
+}
+.sealed .eyebrow {
+  margin: 0.5rem 0 -0.3rem;
+}
+.teaser {
+  margin: 0.4rem 0 0;
+  font: italic 400 1.4rem/1.3 var(--serif);
+  color: var(--muted);
+}
+.opens {
+  margin: 0.6rem 0 0;
+  font: 500 0.6875rem/1.4 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Page-turn controls for keyboard and screen readers: hidden until focused. */
+.turners {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0 var(--gutter);
+}
+.turners__btn {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  border: 0;
+  background: none;
+  white-space: nowrap;
+}
+.turners__btn:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  clip-path: none;
+  padding: 0.8rem 0;
+  font: italic 400 1.2rem/1 var(--serif);
+  text-decoration: underline;
+}
+
+/* ============ Bottom sheet ============ */
+.sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgba(10, 9, 7, 0.5);
+  animation: fade 0.35s var(--ease-out) both;
+}
+.sheet {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 41;
+  padding: 1.5rem var(--gutter) calc(1.75rem + env(safe-area-inset-bottom, 0px));
+  border-radius: 1.1rem 1.1rem 0 0;
+  background: var(--porcelain);
+  color: var(--ink);
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.35);
+  animation: sheet-up 0.42s var(--ease-out) both;
+  --rule: rgba(21, 19, 15, 0.22);
+  --muted: #6a675f;
+  --fg: var(--ink);
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+.sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+.sheet__label {
+  margin: 0;
+  font: 500 0.6875rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sheet__line {
+  margin: 0 0 1.2rem;
+  font: 400 1.5rem/1.32 var(--serif);
+}
+.stub {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0 0 1.2rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px dashed var(--rule);
+  font: 500 0.75rem/1.4 var(--sans);
+  color: var(--muted);
+}
+.stub b {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.625rem;
+  color: var(--ink);
+}
+.play {
+  color: var(--ink);
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -0.5rem -0.7rem -0.5rem 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+}
+.icon-x {
+  position: relative;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.icon-x::before,
+.icon-x::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+.icon-x::after {
+  transform: rotate(-45deg);
+}
+
+/* ============ Video: full-screen vertical ============ */
+.video {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  background: #000;
+  color: #f3efe6;
+  animation: fade 0.4s var(--ease-out) both;
+}
+.video__el {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+@media (min-width: 768px) {
+  .video__el {
+    object-fit: contain;
+  }
+}
+.video__top {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  padding: calc(0.5rem + env(safe-area-inset-top, 0px)) 1rem 0 var(--gutter);
+  background: linear-gradient(rgba(0, 0, 0, 0.55), transparent);
+}
+.icon-btn--light {
+  margin: 0;
+  color: #f3efe6;
+}
+.video__dbg {
+  margin: 0.7rem 0 0;
+  font: 500 0.625rem/1.4 var(--mono);
+  color: #f3efe6;
+  opacity: 0.85;
+}
+.video__caption {
+  position: absolute;
+  left: 50%;
+  bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 2.5rem);
+  margin: 0;
+  padding: 0.4rem 0.7rem;
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.62);
+  font: 500 1rem/1.35 var(--sans);
+  text-align: center;
+  white-space: pre-line;
+}
+.video__hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(11rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  padding: 0.65rem 1.1rem;
+  border: 1px solid rgba(243, 239, 230, 0.5);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  font: 500 0.6875rem/1 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+.video__bar {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 2rem var(--gutter) calc(1rem + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+}
+.video__progress {
+  height: 2px;
+  background: rgba(243, 239, 230, 0.28);
+}
+.video__progress span {
+  display: block;
+  height: 100%;
+  background: #f3efe6;
+  transform-origin: left;
+}
+.video__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+.chip {
+  min-height: 2.75rem;
+  padding: 0 0.9rem;
+  border: 0;
+  background: none;
+  font: 500 0.6875rem/1 var(--sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(243, 239, 230, 0.78);
+}
+.chip[aria-pressed="true"] {
+  color: #f3efe6;
+}
+.chip:first-child {
+  padding-left: 0;
+}
+
+/* ============ Debug (?debug=1) ============ */
+.dbg {
+  display: inline;
+  margin-left: 0.4rem;
+  font-family: var(--mono);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+}
+.dbg__tag {
+  padding: 0.18rem 0.35rem;
+  border: 0;
+  border-radius: 3px;
+  font: 600 0.5625rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+.dbg--brief-approved .dbg__tag {
+  background: #1f7a4d;
+}
+.dbg--brief-draft .dbg__tag {
+  background: #a85f00;
+}
+.dbg--generated .dbg__tag {
+  background: #4c5fa8;
+}
+.dbg__detail {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.4rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(10, 9, 7, 0.92);
+  font: 400 0.6875rem/1.4 var(--mono);
+  color: #f3efe6;
+  text-align: left;
+  white-space: normal;
+}
+.dbg-meta,
+.dbg-cap,
+.dbg-direction {
+  margin: 0.9rem 0 0;
+  padding: 0.4rem 0.55rem;
+  border-left: 2px solid #e0a500;
+  background: rgba(224, 165, 0, 0.12);
+  font: 400 0.6875rem/1.5 var(--mono);
+  font-style: normal;
+  color: var(--fg);
+}
+.dbg-cap {
+  margin: 0.4rem var(--gutter) 0;
+}
+.dbg-module {
+  margin: 0 var(--gutter);
+  padding-top: 0.8rem;
+  font: 400 0.6875rem/1.4 var(--mono);
+}
+.dbg-module summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+.dbg-direction {
+  margin-top: 0.5rem;
+}
+.debugpanel {
+  position: absolute;
+  left: 0.5rem;
+  bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  z-index: 30; /* above the page and rail, below the sheet and the player */
+  max-width: calc(100% - 1rem);
+}
+.debugpanel__pill {
+  padding: 0.5rem 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font: 600 0.625rem/1 var(--mono);
+}
+.debugpanel__body {
+  max-height: 58dvh;
+  overflow: auto;
+  margin-top: 0.4rem;
+  padding: 0.8rem;
+  border-radius: 6px;
+  background: rgba(10, 9, 7, 0.94);
+  color: #eee;
+  font: 400 0.6875rem/1.45 var(--mono);
+}
+.debugpanel__body h3 {
+  margin: 0.9rem 0 0.3rem;
+  font: 600 0.6875rem var(--mono);
+  color: #e0a500;
+}
+.debugpanel__body ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+.debugpanel__body li {
+  margin-bottom: 0.4rem;
+}
+.debugpanel__body a {
+  color: #9ec5ff;
+}
+.debugpanel__legend {
+  margin: 0;
+}
+.debugpanel__legend .dbg {
+  margin: 0 0.4rem 0 0;
+}
+
+/* ============ Motion: reduced ============ */
+/* Page curls become crossfades (the page fade stays); everything else stops moving. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .page,
+  .cover {
+    animation-duration: 0.45s !important;
+  }
+}
+
+/* ============ 3D book (Phase 2) ============ */
+/* The canvas sits behind everything. Until it has drawn its first real frame it stays invisible and the 2D cover shows. */
+.book3d {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1.1s var(--ease-out);
+}
+.book3d.is-ready {
+  opacity: 1;
+}
+.book3d canvas {
+  display: block;
+}
+
+/* Paper, grain and the page turn now come from the 3D book; the ground behind it is the table. */
+.book[data-3d="on"] {
+  background: #0d0c0a;
+  transition: none;
+}
+.book[data-3d="on"]::after {
+  display: none;
+}
+.book[data-3d="on"] .page {
+  animation: none;
+  transition: opacity 0.38s var(--ease-out);
+}
+/* While a leaf is turning the live page steps aside; it fades back in once the leaf has landed. */
+.book[data-3d="on"] .stage[data-turning="true"] .page {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 0.2s;
+  transition-delay: 0s;
+}
+
+/* The cover when the book carries the title: only "Begin" (or the loading lamp) sits below it. */
+.cover--3d {
+  display: grid;
+  align-items: end;
+  place-items: end center;
+  padding-bottom: calc(7vh + env(safe-area-inset-bottom, 0px));
+}
+.cover3d__foot {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+}
+.cover--3d .begin {
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6);
+}
+
+/* ============ Paged books (no scrolling) ============ */
+
+/* ---- Top bar: progress through the book, and the way back to the library ---- */
+.topbar {
+  position: absolute;
+  z-index: 20;
+  inset: 0 0 auto;
+  padding: calc(0.625rem + env(safe-area-inset-top, 0px)) var(--gutter) 0;
+  transition: opacity 0.4s var(--ease-out);
+  pointer-events: none;
+}
+.stage[data-turning="true"] .topbar {
+  opacity: 0.3;
+}
+.topbar__line {
+  height: 2px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.topbar__line span {
+  display: block;
+  height: 100%;
+  background: var(--fg);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease-out);
+}
+.topbar__library {
+  pointer-events: auto;
+  position: absolute;
+  left: calc(var(--gutter) - 0.6rem);
+  top: calc(0.625rem + env(safe-area-inset-top, 0px) + 2px);
+  min-height: 2.75rem;
+  padding: 0.55rem 0.6rem 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: flex-start;
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.topbar__library:hover {
+  color: var(--fg);
+}
+
+/* ---- Opener: header, then a hero that takes whatever height is left ---- */
+.page--opener .hero {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.page--opener .hero__frame {
+  flex: 1 1 0;
+  min-height: 7rem;
+  max-height: var(--hero-max, none);
+  aspect-ratio: auto;
+}
+.page--opener .head {
+  flex: none;
+}
+.page--opener .watch {
+  flex: none;
+  align-self: flex-start;
+}
+
+/* ---- Silent panel: just the still, centred ---- */
+.page--silent {
+  justify-content: center;
+}
+.page--silent .hero {
+  margin: 0;
+}
+
+/* ---- Beats: one thought per page, sized to fit ---- */
+.page--beats {
+  justify-content: center;
+  padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+}
+.pgbeats {
+  display: grid;
+  gap: calc(var(--fs) * 1.6);
+}
+.pgbeat {
+  margin: 0;
+  padding: 0 var(--gutter);
+  font: 400 var(--fs) / 1.32 var(--serif);
+}
+.pgbeat--pending {
+  font-size: inherit;
+}
+.page--beats .dbg-module,
+.page--silent .dbg-module {
+  position: absolute;
+  top: calc(var(--rail-h) + env(safe-area-inset-top, 0px) + 0.2rem);
+  left: 0;
+  right: 0;
+  padding-top: 0;
+  z-index: 3;
+}
+
+/* ---- Close: the quiet CTA ---- */
+.page--close {
+  justify-content: center;
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+}
+.closing {
+  display: grid;
+  gap: 1.75rem;
+  padding: 0 var(--gutter);
+  justify-items: start;
+}
+.closing .cta {
+  padding: 0;
+}
+
+/* ============ Library (chooser; the shelf replaces this) ============ */
+.library {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: calc(3rem + env(safe-area-inset-top, 0px)) var(--gutter) calc(2rem + env(safe-area-inset-bottom, 0px));
+  animation: fade 0.9s var(--ease-out) both;
+}
+.library::-webkit-scrollbar {
+  display: none;
+}
+.library__head .jar {
+  margin-bottom: 1.4rem;
+}
+.library__list {
+  list-style: none;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+.libitem {
+  display: grid;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 1.05rem 0 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  text-align: left;
+  color: var(--fg);
+}
+.libitem__eyebrow {
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.libitem__title {
+  font: 500 1.65rem/1.1 var(--serif);
+  letter-spacing: -0.005em;
+}
+.libitem__state {
+  font: 500 0.625rem/1.3 var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.libitem[data-sealed="true"] .libitem__title {
+  color: var(--muted);
+}
+.libitem:hover .libitem__title,
+.libitem:focus-visible .libitem__title {
+  color: var(--accent);
+}
+
+/* ============ Library on the 3D shelf ============ */
+.library--3d {
+  overflow: hidden;
+  /* The canvas shows through; only the buttons over the spines take touches. */
+  pointer-events: none;
+  padding: calc(2.6rem + env(safe-area-inset-top, 0px)) var(--gutter) 0;
+}
+.library--3d .title {
+  max-width: 11ch;
+  /* Scaled to the height as well as the width, so it clears the lamp line on a short phone. */
+  font-size: min(9.4vw, 4.6vh, 2.6rem);
+}
+@media (max-height: 680px) {
+  .library--3d .title {
+    max-width: none;
+  }
+  /* No room for the line without it landing on the fire. */
+  .library__note {
+    display: none;
+  }
+}
+.shelfbtns {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.shelfbtns li {
+  position: absolute;
+  pointer-events: auto;
+}
+.shelfbtn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 2px;
+}
+.shelfbtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.library__note {
+  position: absolute;
+  left: var(--gutter);
+  right: 6.4rem;
+  bottom: calc(1.3rem + env(safe-area-inset-bottom, 0px));
+  margin: 0;
+  font: italic 400 1.02rem/1.3 var(--serif);
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.library__sound {
+  position: absolute;
+  right: var(--gutter);
+  bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  pointer-events: auto;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.2rem 0.5rem 0.6rem;
+  border: 0;
+  background: none;
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  z-index: 2;
+}
+.library__sound[aria-pressed="true"] {
+  color: var(--fg);
+}

@@ -1,0 +1,19 @@
+node_modules
+dist
+.DS_Store
+
+# Kept out of the public repo: the client creative brief and what is extracted from it (it names client staff and
+# carries internal comments), the build brief, and the 8K source of the fire texture (9MB, licence unverified).
+# Add any of them back with `git add -f` if you want them published.
+*.docx
+docs/source/
+BRIEF.md
+GV90*Build*Brief*.md
+assets-src/
+.claude/
+
+# Not cleared for a public repo. The three stills are frames from the brief (the client warned against using
+# first-edition production images), and the fire photo's licence is listed as "not verified". The page falls back
+# to labelled placeholders and the procedural flame without them. To publish them: `git add -f public/assets/stills public/assets/fire`.
+public/assets/stills/
+public/assets/fire/

@@ -1,0 +1,20 @@
+/* Palette: porcelain white, ink black, moonlight grey, and one accent per chapter (set inline as --accent). */
+:root {
+  --porcelain: #f6f3ec;
+  --hanji: #efe9dc;
+  --ink: #15130f;
+  --moon: #a8a59b;
+
+  --serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Slow and deliberate: ease-out only, nothing bouncy. */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --gutter: 1.75rem;
+  --rail-h: 2.25rem;
+
+  /* Hanji (mulberry paper): a fine grain plus long, faint fibres, as a procedural SVG so there is no image file. */
+  --hanji-texture: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='g' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .36  0 0 0 0 .26  0 0 0 .26 0'/></filter><filter id='f' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='.045 .7' numOctaves='2' seed='8' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .43  0 0 0 0 .3  0 0 0 .75 -.34'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>");
+}

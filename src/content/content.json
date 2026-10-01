@@ -1,0 +1,1366 @@
+{
+  "meta": {
+    "bookTitle": {
+      "text": "The Making of GV90",
+      "source": "generated",
+      "ref": "Build Brief › Concept (working title)"
+    },
+    "creativeBrief": {
+      "job": "104632",
+      "version": "v1"
+    },
+    "ryiUrl": {
+      "url": "https://www.genesis.com/au/en/models/luxury-suv-genesis/gv90/register-your-interest.html",
+      "ref": "the account team comment on the CTA, 16 Sep (creative brief v1)"
+    },
+    "sealedTeaser": {
+      "text": "Over the coming months before the car is available, we’ll be sharing more of the story behind the GV90.",
+      "source": "brief-approved",
+      "ref": "Creative brief v1 › RYI autoresponder › Module 1 › Set expectations",
+      "note": "Direction line in an approved section ('use as written'); reused here as the sealed-page teaser. Swap when creative writes teasers."
+    },
+    "cta": {
+      "label": {
+        "text": "Secure Your Place",
+        "source": "brief-approved",
+        "ref": "Creative brief v1 › DBA › CTA; the client comment 22 Sep ('matches the CTA used in RYI page')"
+      },
+      "ryiLabel": {
+        "text": "Coming Soon",
+        "source": "brief-approved",
+        "ref": "Creative brief v1 › CTA note + the account team comment 23 Sep: people who have RYI-ed see 'Coming Soon', which links nowhere"
+      }
+    },
+    "openFlags": [
+      {
+        "id": "launch-date",
+        "note": "Creative brief v1 says a February 2027 local launch; the confirmed local launch is now April 2027 (Build Brief). No launch date appears in any copy."
+      },
+      {
+        "id": "spec-claims",
+        "note": "World-first roof airbag, coach doors (Neolun only) and the 123.5kWh battery must be checked against Genesis's latest spec before anything goes client-facing. Beats that carry spec claims are flagged product-claim."
+      },
+      {
+        "id": "stills",
+        "note": "The three prologue stills are screenshots embedded in the creative brief (YouTube captures, about 1000px wide, so they are soft on a phone). the client's comment (22 Sep): 'Just be careful not to use the production first edition images'. Internal scamp only; confirm before sharing outside."
+      },
+      {
+        "id": "cta-wording",
+        "note": "DBA module 3 still reads 'Register your interest' in the doc body, but comments (the client 22 Sep, the account team 23 Sep) change every CTA to 'Secure Your Place'. This build follows the comments."
+      },
+      {
+        "id": "source-typos",
+        "note": "Kept verbatim and flagged on the string: 'lap area' (PL1, probably 'lamp'); 'Jeweler' (US spelling in PL3). Fix at source, not here."
+      },
+      {
+        "id": "unlock-dates",
+        "note": "Neither brief gives unlock dates. The dates here are placeholders one week apart, so every unlock.placeholder is true."
+      },
+      {
+        "id": "old-section",
+        "note": "The OLD Neolun story section (including the Donckerwolke and Chung quotes) is not loaded: superseded, quotes unverified, and the client asked to drop Hyundai/HMG mentions (comment, 22 Sep)."
+      },
+      {
+        "id": "audience",
+        "note": "the client (22 Sep): test sending Pre-Launch 1 to the full database; Pre-Launch 2 onwards go to RYI-ed only. Chapters 4-5 are not briefed, so their audience is tbc."
+      },
+      {
+        "id": "binding",
+        "note": "The five-hole stitched binding on the cover is a visual nod only; creative to verify the reference."
+      },
+      {
+        "id": "vernissage",
+        "note": "The vernissage event is still in planning (creative brief). Chapter 5 carries no event details, and the RSVP is a labelled stub."
+      },
+      {
+        "id": "hotspot-positions",
+        "note": "Hotspot positions are layout placeholders, not callouts pointing at real features of the car."
+      },
+      {
+        "id": "fire-texture",
+        "note": "The fireplace flame uses a photograph from aitextured.com (public/assets/fire/flame.webp, cut from an 8K tile). The site lists its licence and source as 'not verified'. Internal scamp only: verify the licence or replace it before anything goes client-facing. The procedural flame remains as the fallback and carries the fire if the image is removed."
+      }
+    ],
+    "sources": [
+      {
+        "id": "yt-dba-1",
+        "kind": "youtube",
+        "label": "DBA module 1 source video (two-line lamps)",
+        "url": "https://www.youtube.com/watch?v=4Kmnxe_T4BM"
+      },
+      {
+        "id": "yt-dba-2",
+        "kind": "youtube",
+        "label": "DBA module 2 source video (silhouette)",
+        "url": "https://www.youtube.com/watch?v=0HDEHu3r2zo"
+      },
+      {
+        "id": "yt-dba-3",
+        "kind": "youtube",
+        "label": "DBA module 3 source video (sunset open cabin)",
+        "url": "https://www.youtube.com/watch?v=6fewjTfhazo"
+      },
+      {
+        "id": "news-roof-airbag",
+        "kind": "web",
+        "label": "news.com.au: roof airbag (source link on the PL2 airbag claim)",
+        "url": "https://www.news.com.au/technology/motoring/hitech/genesis-gv90-debuts-worldfirst-roof-airbag/news-story/202315b55dd2926d5e27259bde4b7caa"
+      }
+    ],
+    "ui": {
+      "begin": {
+        "text": "Begin",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure (one 'Begin' tap)"
+      },
+      "loading": {
+        "text": "Opening the book",
+        "source": "generated",
+        "ref": "Build Brief › Source transparency (UI labels: generated)"
+      },
+      "eyebrowChapter": {
+        "text": "Chapter {n}",
+        "source": "generated",
+        "ref": "Build Brief › Source transparency (UI labels: generated)"
+      },
+      "eyebrowPrologue": {
+        "text": "Prologue",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure"
+      },
+      "eyebrowEpilogue": {
+        "text": "Epilogue",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure"
+      },
+      "sealed": {
+        "text": "Sealed",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure (locked chapters show as sealed pages)"
+      },
+      "opensOn": {
+        "text": "Opens {date}",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure (unlock date)"
+      },
+      "dateTbc": {
+        "text": "Opening date to be confirmed",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure (unlock date)"
+      },
+      "watch": {
+        "text": "Watch the film",
+        "source": "generated",
+        "ref": "Build Brief › Experience (video)"
+      },
+      "play": {
+        "text": "Play",
+        "source": "generated",
+        "ref": "Build Brief › Experience (hotspots)"
+      },
+      "pause": {
+        "text": "Pause",
+        "source": "generated",
+        "ref": "Build Brief › Experience (video)"
+      },
+      "close": {
+        "text": "Close",
+        "source": "generated",
+        "ref": "Build Brief › Experience (video)"
+      },
+      "captionsOn": {
+        "text": "Captions on",
+        "source": "generated",
+        "ref": "Build Brief › Experience (captions on by default)"
+      },
+      "captionsOff": {
+        "text": "Captions off",
+        "source": "generated",
+        "ref": "Build Brief › Experience (captions)"
+      },
+      "tapForSound": {
+        "text": "Tap for sound",
+        "source": "generated",
+        "ref": "Build Brief › Experience (muted autoplay with a tap for sound)"
+      },
+      "soundOn": {
+        "text": "Sound on",
+        "source": "generated",
+        "ref": "Build Brief › Experience (video)"
+      },
+      "soundOff": {
+        "text": "Sound off",
+        "source": "generated",
+        "ref": "Build Brief › Experience (video)"
+      },
+      "prevChapter": {
+        "text": "Previous chapter",
+        "source": "generated",
+        "ref": "Build Brief › Experience (navigation)"
+      },
+      "nextChapter": {
+        "text": "Next chapter",
+        "source": "generated",
+        "ref": "Build Brief › Experience (navigation)"
+      },
+      "railLabel": {
+        "text": "Chapters",
+        "source": "generated",
+        "ref": "Build Brief › Experience (chapter rail)"
+      },
+      "videoLabel": {
+        "text": "Video player",
+        "source": "generated",
+        "ref": "Build Brief › Experience (video)"
+      },
+      "library": {
+        "text": "Library",
+        "source": "generated",
+        "ref": "Build Brief › Source transparency (UI labels: generated); library home (Phase 2 extension)"
+      },
+      "pageOf": {
+        "text": "Page {n} of {total}",
+        "source": "generated",
+        "ref": "Build Brief › Source transparency (UI labels: generated)"
+      },
+      "prevPage": {
+        "text": "Previous page",
+        "source": "generated",
+        "ref": "Build Brief › Source transparency (UI labels: generated)"
+      },
+      "nextPage": {
+        "text": "Next page",
+        "source": "generated",
+        "ref": "Build Brief › Source transparency (UI labels: generated)"
+      }
+    }
+  },
+  "chapters": [
+    {
+      "n": 0,
+      "id": "out-of-the-shadows",
+      "kind": "prologue",
+      "title": {
+        "text": "Out of the shadows",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 0"
+      },
+      "unlockedBy": {
+        "text": "DBA teaser",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 0"
+      },
+      "unlock": {
+        "at": "2026-09-17",
+        "placeholder": true
+      },
+      "audience": {
+        "segment": "all",
+        "ref": "Creative brief v1 › DBA › Audience: Full Database"
+      },
+      "theme": {
+        "mode": "ink",
+        "accent": {
+          "name": "lamp glow",
+          "hex": "#BFD9D2"
+        },
+        "placeholder": true
+      },
+      "headerDirection": {
+        "text": "Emotional entry point Official GV90 AU introduction",
+        "source": "brief-approved",
+        "ref": "Creative brief v1 › DBA › SL/PH/Header",
+        "note": "Direction for the eDM subject line and header, not reader copy. Content focus for the whole DBA is 'Minimal words'."
+      },
+      "epigraph": null,
+      "heroes": [
+        {
+          "status": "from-brief",
+          "src": "/assets/stills/dba-1-lamps.jpg",
+          "assetName": "DBA hero frame 1 – two-line lamps out of the shadows",
+          "alt": {
+            "text": "The front lamps of the vehicle glow in a dark concrete space",
+            "source": "generated"
+          },
+          "aspect": "16:9",
+          "note": "Screenshot embedded in the creative brief (YouTube capture), Module 1.",
+          "sourceId": "yt-dba-1"
+        },
+        {
+          "status": "from-brief",
+          "src": "/assets/stills/dba-2-silhouette.jpg",
+          "assetName": "DBA hero frame 2 – silhouette",
+          "alt": {
+            "text": "The silhouette of the vehicle emerges from darkness, lamps lit",
+            "source": "generated"
+          },
+          "aspect": "16:9",
+          "note": "Screenshot embedded in the creative brief (YouTube capture), Module 2.",
+          "sourceId": "yt-dba-2"
+        },
+        {
+          "status": "from-brief",
+          "src": "/assets/stills/dba-3-sunset.jpg",
+          "assetName": "DBA hero frame 3 – sunset open cabin",
+          "alt": {
+            "text": "The vehicle with both doors open against a sunset, the cabin backlit",
+            "source": "generated"
+          },
+          "aspect": "16:9",
+          "note": "Screenshot embedded in the creative brief (YouTube capture), Module 3.",
+          "sourceId": "yt-dba-3"
+        }
+      ],
+      "modules": [
+        {
+          "label": {
+            "text": "The Vehicle Teaser",
+            "source": "brief-approved",
+            "ref": "Creative brief v1 › DBA › Module 1"
+          },
+          "direction": {
+            "text": "Tease the emergence of a new Genesis flagship icon redefining luxury. Keep text ultra-vague, high-level, and atmospheric. Exclusions: Do not include any mention of Neolun etymology, Son-nim hospitality, etc. Keep this very top level, and vague",
+            "source": "brief-approved",
+            "ref": "Creative brief v1 › DBA › Module 1 › Copy"
+          },
+          "beats": []
+        },
+        {
+          "label": {
+            "text": "Form, Presence, Stance",
+            "source": "brief-approved",
+            "ref": "Creative brief v1 › DBA › Module 2"
+          },
+          "direction": {
+            "text": "Focus on commanding visual presence, scale, and quiet elegance. Tease the vehicle’s silhouette without revealing specific details. Exclusions: Do not mention paint colors (Midnight Black/Majestic Blue), body variants, or door mechanics.",
+            "source": "brief-approved",
+            "ref": "Creative brief v1 › DBA › Module 2 › Copy"
+          },
+          "beats": []
+        },
+        {
+          "label": {
+            "text": "Sanctuary Atmosphere",
+            "source": "brief-approved",
+            "ref": "Creative brief v1 › DBA › Module 3"
+          },
+          "direction": {
+            "text": "Evoke warmth, sanctuary, and quiet luxury. Use the open doors as a seamless visual lead-in to invite the reader to be the first to follow the journey. Exclusions: No mention of specific interior tech, B-pillarless coach doors, or equipment details.",
+            "source": "brief-approved",
+            "ref": "Creative brief v1 › DBA › Module 3 › Copy"
+          },
+          "beats": []
+        }
+      ],
+      "hotspots": [],
+      "video": {
+        "name": "DBA teaser clip (not yet named in the brief)",
+        "status": "placeholder",
+        "placeholderId": "teaser",
+        "sources": {
+          "mp4": null,
+          "webm": null
+        },
+        "poster": null,
+        "captions": {
+          "vtt": null,
+          "source": "generated"
+        },
+        "ref": "Build Brief › Chapter structure, row 0 (Teaser clip)"
+      },
+      "showCta": true
+    },
+    {
+      "n": 1,
+      "id": "philosophy-of-subtraction",
+      "kind": "chapter",
+      "title": {
+        "text": "The Philosophy of Subtraction",
+        "source": "brief-draft",
+        "ref": "Creative brief v1 › PL1 › Module 1 (Introduce 'The Philosophy of Subtraction')"
+      },
+      "unlockedBy": {
+        "text": "Pre-Launch 1",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 1"
+      },
+      "unlock": {
+        "at": "2026-09-24",
+        "placeholder": true
+      },
+      "audience": {
+        "segment": "all",
+        "ref": "Creative brief v1 › PL1 › Audience; the client 22 Sep: test sending TS1 to the full database"
+      },
+      "theme": {
+        "mode": "paper",
+        "accent": {
+          "name": "celadon grey",
+          "hex": "#7C8F8A"
+        },
+        "placeholder": true
+      },
+      "headerDirection": {
+        "text": "Poetic / emotional, unhurried entry point to establish curiosity and intrigue.",
+        "source": "brief-draft",
+        "ref": "Creative brief v1 › PL1 › SL / PH / Header"
+      },
+      "epigraph": {
+        "text": null,
+        "source": "brief-draft",
+        "ref": "PL1 header: the brief gives direction only, no line"
+      },
+      "heroes": [
+        {
+          "status": "placeholder",
+          "src": null,
+          "assetName": "Chapter 1 hero – Moon Jar (procedural 3D arrives in Phase 3)",
+          "alt": {
+            "text": "Placeholder frame for the Moon Jar hero",
+            "source": "generated"
+          },
+          "aspect": "4:5"
+        }
+      ],
+      "modules": [
+        {
+          "label": {
+            "text": "Neolun Origin",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL1 › Module 1"
+          },
+          "direction": {
+            "text": "Frame luxury strictly through restraint and the Korean Moon Jar as an artistic muse.",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL1 › Module 1"
+          },
+          "beats": [
+            {
+              "text": "When Genesis set out to build their most ambitious car, the hardest part wasn't what to add. It was what to remove.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 1"
+            },
+            {
+              "text": "Strip away everything that distracts, and you are left with nothing to hide behind",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 1"
+            },
+            {
+              "text": "Every curve has to carry meaning on its own",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 1"
+            },
+            {
+              "text": "To make something that would never age, they focused on form itself.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 1"
+            },
+            {
+              "text": "Has this been pulled off before? Yes.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 1"
+            },
+            {
+              "text": "The Korean Moon Jar is 300 years old. Auctioned for millions, displayed in the world's great museums, and yet no ornamentation. Just pure form doing all the work.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 1",
+              "flags": [
+                "fact-claim",
+                "verify-before-use"
+              ],
+              "note": "Factual claim about the Moon Jar (age, auction value, museums); not a GV90 spec but still needs verifying."
+            },
+            {
+              "text": "This builds on the design language that Genesis has always followed.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 1"
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "Rear Profile & Invisible Spoiler",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL1 › Module 2"
+          },
+          "direction": {
+            "text": "Connect Moon Jar minimalism to physical execution: laser-etched lamps, invisible rear spoiler, and porcelain glaze paint.",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL1 › Module 2"
+          },
+          "beats": [
+            {
+              "text": "The rear spoiler, the thing that tames lift and drag, had to do the impossible by becoming invisible.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 2 › Rear Profile & Invisible Spoiler",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            },
+            {
+              "text": "They went to work on the rear body curvature itself, refining it millimeter by millimeter until it could do a spoiler’s job without touching the design.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 2 › Rear Profile & Invisible Spoiler"
+            },
+            {
+              "text": "The result: The car could perform as if it had a spoiler without one, and kept the purity of its design intact. The spoiler was gone, but the design demanded more minimising.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 2 › Rear Profile & Invisible Spoiler",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "Laser-Etched Headlights / Lamps",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL1 › Module 2"
+          },
+          "beats": [
+            {
+              "text": "Form without compromise.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 2 › Laser-Etched Headlights / Lamps"
+            },
+            {
+              "text": "Body-integrated lamps that seamlessly blend into the front and rear, conveying strength and grandeur.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 2 › Laser-Etched Headlights / Lamps",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            },
+            {
+              "text": "They painted the entire lens in the body colour. Then, using a laser, we precisely carved away only the lap area.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 2 › Laser-Etched Headlights / Lamps",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ],
+              "note": "Source typo kept verbatim: 'lap area' is probably 'lamp area'. Voice also shifts from 'They' to 'we'."
+            },
+            {
+              "text": "The gaps are still there, but engineered so finely that the eye simply can’t find them.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 2 › Laser-Etched Headlights / Lamps"
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "The Emerging Icon",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL1 › Module 3"
+          },
+          "direction": {
+            "text": "Position the GV90 as the emerging icon of the Genesis brand.",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL1 › Module 3"
+          },
+          "beats": [
+            {
+              "text": "The vision that captivated the world now has a name, a commanding scale, and a presence that redefines flagship electric luxury.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL1 › Module 3",
+              "note": "Sits inside a direction bullet ('Position the GV90 as…'); read here as copy. Confirm with creative."
+            }
+          ]
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "moon-jar",
+          "kind": "info",
+          "label": {
+            "text": "Moon jar",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 1 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 0,
+            "beat": 5
+          },
+          "at": {
+            "x": 50,
+            "y": 38
+          },
+          "videoAt": null
+        },
+        {
+          "id": "rear-profile",
+          "kind": "info",
+          "label": {
+            "text": "Rear profile",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 1 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 1,
+            "beat": 0
+          },
+          "at": {
+            "x": 70,
+            "y": 68
+          },
+          "videoAt": null
+        },
+        {
+          "id": "lamp",
+          "kind": "info",
+          "label": {
+            "text": "Lamp",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 1 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 2,
+            "beat": 1
+          },
+          "at": {
+            "x": 28,
+            "y": 66
+          },
+          "videoAt": null
+        }
+      ],
+      "video": {
+        "name": "GV90_Documentary_EP.02_Full_16x9_NoText_HighRes",
+        "status": "placeholder",
+        "placeholderId": "ep02",
+        "sources": {
+          "mp4": null,
+          "webm": null
+        },
+        "poster": null,
+        "captions": {
+          "vtt": null,
+          "source": "generated"
+        },
+        "ref": "Creative brief v1 › PL1 › Content Focus"
+      },
+      "showCta": true
+    },
+    {
+      "n": 2,
+      "id": "architecture-of-welcome",
+      "kind": "chapter",
+      "title": {
+        "text": "The Architecture of Welcome",
+        "source": "brief-draft",
+        "ref": "Creative brief v1 › PL2 › Module 1"
+      },
+      "unlockedBy": {
+        "text": "Pre-Launch 2",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 2"
+      },
+      "unlock": {
+        "at": "2026-10-08",
+        "placeholder": true
+      },
+      "audience": {
+        "segment": "ryi-only",
+        "ref": "the client 22 Sep: TS2 onwards should go only to RYI-ed"
+      },
+      "theme": {
+        "mode": "paper",
+        "accent": {
+          "name": "warm amber",
+          "hex": "#B8863B"
+        },
+        "placeholder": true
+      },
+      "headerDirection": {
+        "text": "Focus on atmosphere, grandeur, and seamless transition.",
+        "source": "brief-draft",
+        "ref": "Creative brief v1 › PL2 › SL / PH / Header"
+      },
+      "epigraph": {
+        "text": "An uncompromised welcome.",
+        "source": "brief-draft",
+        "ref": "Creative brief v1 › PL2 › SL / PH / Header"
+      },
+      "heroes": [
+        {
+          "status": "from-brief",
+          "src": "/assets/stills/dba-3-sunset.jpg",
+          "assetName": "DBA hero frame 3 – sunset open cabin (reused)",
+          "alt": {
+            "text": "The vehicle with both doors open against a sunset, the cabin backlit",
+            "source": "generated"
+          },
+          "aspect": "16:9",
+          "note": "Reused from the prologue as a stand-in until a Chapter 2 still is supplied.",
+          "sourceId": "yt-dba-3"
+        }
+      ],
+      "modules": [
+        {
+          "label": {
+            "text": "The Architecture of Welcome",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL2 › Module 1"
+          },
+          "direction": {
+            "text": "Ground the open doors in Son-nim (treating passengers as honored guests) and the feeling of a red-carpet entrance.",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL2 › Module 1"
+          },
+          "beats": [
+            {
+              "text": "From the early stages of development, we all agreed that as a flagship, we needed to approach this not merely as a 'car', but as a 'space'.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 1 › The Red Carpet Entry"
+            },
+            {
+              "text": "When both doors opened, fully exposing the space between them, we wanted to give customers the feeling of stepping off a red carpet.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 1 › The Red Carpet Entry"
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "The Invisible Pillar (Form & Space)",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL2 › Module 2"
+          },
+          "direction": {
+            "text": "Focus on how moving the B-pillar inside the doors preserves pure, unbroken exterior lines and expands the spatial presence of the cabin",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL2 › Module 2"
+          },
+          "beats": [
+            {
+              "text": "Genesis didn't just restyle a door. They rewrote the paradigm of entry itself to define a new flagship standard. So how do you move a B-pillar? Simple: hide it inside the door. From the passenger's perspective, it just isn't there.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 2",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            },
+            {
+              "text": "Compromise was never an option. What was truly important to us was a coach door where the front and rear doors open independently.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 2",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ],
+              "note": "Coach doors are GV90 Neolun only (creative brief v1 › Key Features)."
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "Benefit 1: Total Isolation & Quiet Sanctuary",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL2 › Module 3"
+          },
+          "direction": {
+            "text": "Detail the two core engineered benefits enabled by this architecture—total acoustic/weather isolation AND uncompromised structural safety tech (hidden steel beams, impact hooks, and roof airbags).",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL2 › Module 3",
+            "flags": [
+              "product-claim",
+              "verify-before-use"
+            ]
+          },
+          "beats": [
+            {
+              "text": "The B-pillar does one more thing people don't think about: keeping wind and rain and road noise where they belong, outside.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 3 › Benefit 1"
+            },
+            {
+              "text": "And because this is a flagship luxury SUV, the standard wasn't just 'keep water out'. The standard was total isolation. Silence inside a vehicle is the product of hundreds of elements working together: glass thickness, structural damping, cabin insulation, partition design, each playing its part. But the door seal is one of the most vulnerable pieces of all.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 3 › Benefit 1",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "Benefit 2: World-First Innovation & Protective Architecture",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL2 › Module 3"
+          },
+          "beats": [
+            {
+              "text": "The Overhead Roof Airbag. Engineered specifically to deploy from the glass ceiling, surrounding the entire cabin in a protective canopy without compromising the open, panoramic view above.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 3 › Benefit 2",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ],
+              "note": "'World-first' roof airbag: the account team's comment on this heading links a news.com.au article (meta.sources › news-roof-airbag). Still verify against Genesis's latest spec."
+            },
+            {
+              "text": "The GV90 Neolun defined a new standard of safety for the luxury flagship.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL2 › Module 3 › Benefit 2",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            }
+          ]
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "doors",
+          "kind": "info",
+          "label": {
+            "text": "Doors",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 2 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 1,
+            "beat": 1
+          },
+          "at": {
+            "x": 68,
+            "y": 30
+          },
+          "videoAt": null
+        },
+        {
+          "id": "seal",
+          "kind": "info",
+          "label": {
+            "text": "Seal",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 2 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 2,
+            "beat": 0
+          },
+          "at": {
+            "x": 31,
+            "y": 70
+          },
+          "videoAt": null
+        },
+        {
+          "id": "roof",
+          "kind": "info",
+          "label": {
+            "text": "Roof",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 2 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 3,
+            "beat": 0
+          },
+          "at": {
+            "x": 46,
+            "y": 22
+          },
+          "videoAt": null
+        }
+      ],
+      "video": {
+        "name": "GV90_Documentary_EP.01_Full_16x9_ENG_HighRes",
+        "status": "placeholder",
+        "placeholderId": "ep01",
+        "sources": {
+          "mp4": null,
+          "webm": null
+        },
+        "poster": null,
+        "captions": {
+          "vtt": null,
+          "source": "generated"
+        },
+        "ref": "Creative brief v1 › PL2 › Content Focus"
+      },
+      "showCta": true
+    },
+    {
+      "n": 3,
+      "id": "destination-inside",
+      "kind": "chapter",
+      "title": {
+        "text": "A Destination Inside",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 3 (adapted from 'Its destination was inside', creative brief v1 › PL3 › Module 1)"
+      },
+      "unlockedBy": {
+        "text": "Pre-Launch 3",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 3"
+      },
+      "unlock": {
+        "at": "2026-10-15",
+        "placeholder": true
+      },
+      "audience": {
+        "segment": "ryi-only",
+        "ref": "the client 22 Sep: TS2 onwards should go only to RYI-ed"
+      },
+      "theme": {
+        "mode": "paper",
+        "accent": {
+          "name": "walnut",
+          "hex": "#6B5B4B"
+        },
+        "placeholder": true
+      },
+      "headerDirection": null,
+      "epigraph": {
+        "text": "Stepping inside Genesis’ vision of flagship interior luxury.",
+        "source": "brief-draft",
+        "ref": "Creative brief v1 › PL3 › SL / PH / Header"
+      },
+      "heroes": [
+        {
+          "status": "placeholder",
+          "src": null,
+          "assetName": "Chapter 3 hero – interior, lounge seating (still TBC)",
+          "alt": {
+            "text": "Placeholder frame for the interior hero",
+            "source": "generated"
+          },
+          "aspect": "4:5"
+        }
+      ],
+      "modules": [
+        {
+          "label": {
+            "text": "Space for Connection",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL3 › Module 1"
+          },
+          "direction": {
+            "text": "Frame the cabin not as a traditional car interior, but as a private sanctuary and living space focused on human togetherness.",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL3 › Module 1"
+          },
+          "beats": [
+            {
+              "text": "Every car is designed to reach a destination. The GV90 began elsewhere. Its destination was inside. A place you'd never want to leave, moving or still.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 1"
+            },
+            {
+              "text": "We wanted to break away from conventional automotive interior design rules and create a space that warmly wraps around you.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 1"
+            },
+            {
+              "text": "GV90 had a seat that turned. One rotation and it’s no longer the same space– a space for connection, for being together.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 1",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            },
+            {
+              "text": "Every carefully orchestrated moment, designed for connection, the space begins to pull you in deeper.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 1"
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "Sensory High Craftsmanship & Intuitive Luxury Tech",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL3 › Module 2"
+          },
+          "direction": {
+            "text": "Combine authentic tactile materials (wool cashmere, stone slate, wood) with invisible, indirect ambient illumination and human-centered innovation.",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL3 › Module 2"
+          },
+          "beats": [
+            {
+              "text": "Our fingertips can sense a difference of a tenth of a millimeter. And in a cabin this quiet, every detail had to be worth finding.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2"
+            },
+            {
+              "text": "In nature, nothing feels out of place. What you see and what you touch are telling you the same thing, and that puts you at ease into a natural state.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2"
+            },
+            {
+              "text": "When you see wood, you expect the warmth of its grain; when you see stone, you expect its solid, weighty touch. Authenticity begins with the essence of a material.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2"
+            },
+            {
+              "text": "The team wanted to bring this harmony of senses inside the GV90. But real materials weren't designed for a car.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2"
+            }
+          ]
+        },
+        {
+          "label": {
+            "text": "Key Materials Summary",
+            "source": "brief-draft",
+            "ref": "Creative brief v1 › PL3 › Module 2"
+          },
+          "beats": [
+            {
+              "text": "Woven Wool Cashmere: Visual softness with a warmer touch.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2 › Key Materials Summary",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            },
+            {
+              "text": "Natural Stone Slate: Real stone garnishes preserved for tactile texture.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2 › Key Materials Summary",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            },
+            {
+              "text": "Real Wood: Natural grain flooring underfoot.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2 › Key Materials Summary",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ]
+            },
+            {
+              "text": "Jeweler-Cut Controls: Gem-faceted buttons and dials.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › Module 2 › Key Materials Summary",
+              "flags": [
+                "product-claim",
+                "verify-before-use"
+              ],
+              "note": "US spelling 'Jeweler' kept verbatim; AU copy would read 'Jeweller'."
+            },
+            {
+              "text": "The reason we obsessed over such minute differences was that we treated the GV90 as a work of art.",
+              "source": "brief-draft",
+              "ref": "Creative brief v1 › PL3 › after Key Materials Summary"
+            }
+          ]
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "seat",
+          "kind": "info",
+          "label": {
+            "text": "Seat",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 3 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 0,
+            "beat": 2
+          },
+          "at": {
+            "x": 50,
+            "y": 52
+          },
+          "videoAt": null
+        },
+        {
+          "id": "wool-cashmere",
+          "kind": "info",
+          "label": {
+            "text": "Wool cashmere",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 3 (each material)"
+          },
+          "lineFrom": {
+            "module": 2,
+            "beat": 0
+          },
+          "at": {
+            "x": 24,
+            "y": 32
+          },
+          "videoAt": null
+        },
+        {
+          "id": "slate",
+          "kind": "info",
+          "label": {
+            "text": "Slate",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 3 (each material)"
+          },
+          "lineFrom": {
+            "module": 2,
+            "beat": 1
+          },
+          "at": {
+            "x": 74,
+            "y": 36
+          },
+          "videoAt": null
+        },
+        {
+          "id": "wood",
+          "kind": "info",
+          "label": {
+            "text": "Wood",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 3 (each material)"
+          },
+          "lineFrom": {
+            "module": 2,
+            "beat": 2
+          },
+          "at": {
+            "x": 30,
+            "y": 78
+          },
+          "videoAt": null
+        },
+        {
+          "id": "controls",
+          "kind": "info",
+          "label": {
+            "text": "Controls",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 3 (Hotspots)"
+          },
+          "lineFrom": {
+            "module": 2,
+            "beat": 3
+          },
+          "at": {
+            "x": 72,
+            "y": 72
+          },
+          "videoAt": null
+        }
+      ],
+      "video": {
+        "name": "GV90_Documentary_EP.03_Full_16x9_ENG_HighRes",
+        "status": "placeholder",
+        "placeholderId": "ep03",
+        "sources": {
+          "mp4": null,
+          "webm": null
+        },
+        "poster": null,
+        "captions": {
+          "vtt": null,
+          "source": "generated"
+        },
+        "ref": "Creative brief v1 › PL3 › Content Focus"
+      },
+      "showCta": true
+    },
+    {
+      "n": 4,
+      "id": "made-for-you",
+      "kind": "chapter",
+      "title": {
+        "text": "Made for You",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 4 (generated)"
+      },
+      "unlockedBy": {
+        "text": "Order-wait journey",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 4"
+      },
+      "unlock": {
+        "at": "2026-10-22",
+        "placeholder": true
+      },
+      "audience": {
+        "segment": "tbc",
+        "ref": "Not briefed: the Miro journey beyond the three eDMs is to be briefed later"
+      },
+      "theme": {
+        "mode": "paper",
+        "accent": {
+          "name": "clay",
+          "hex": "#9A7B63"
+        },
+        "placeholder": true
+      },
+      "headerDirection": null,
+      "epigraph": {
+        "text": null,
+        "source": "generated",
+        "ref": "Chapter 4 is not briefed"
+      },
+      "heroes": [
+        {
+          "status": "placeholder",
+          "src": null,
+          "assetName": "Chapter 4 hero – the owner's car in progress (TBC)",
+          "alt": {
+            "text": "Placeholder frame for the build-to-order hero",
+            "source": "generated"
+          },
+          "aspect": "4:5"
+        }
+      ],
+      "modules": [
+        {
+          "label": {
+            "text": "Build-to-order personalisation",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 4"
+          },
+          "direction": {
+            "text": "Build-to-order personalisation; the owner's car in progress",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 4 (story)",
+            "note": "Background in the creative brief: Australian models are highly personalised and built to order. No options, colours or trims are named here on purpose."
+          },
+          "beats": [
+            {
+              "text": null,
+              "source": "generated",
+              "ref": "Chapter 4 copy: not yet written; creative to supply (creative)"
+            }
+          ]
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "colour-trim-picker",
+          "kind": "picker",
+          "label": {
+            "text": "Colour and trim picker",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 4 (Hotspots)"
+          },
+          "line": {
+            "text": null,
+            "source": "generated",
+            "ref": "Picker options pending Genesis spec; none invented"
+          },
+          "at": {
+            "x": 50,
+            "y": 52
+          },
+          "videoAt": null
+        }
+      ],
+      "video": null,
+      "showCta": true
+    },
+    {
+      "n": 5,
+      "id": "arrival",
+      "kind": "epilogue",
+      "title": {
+        "text": "Arrival",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 5 (generated)"
+      },
+      "unlockedBy": {
+        "text": "Welcome journey / Vernissage event",
+        "source": "generated",
+        "ref": "Build Brief › Chapter structure, row 5"
+      },
+      "unlock": {
+        "at": "2026-10-29",
+        "placeholder": true
+      },
+      "audience": {
+        "segment": "tbc",
+        "ref": "Not briefed"
+      },
+      "theme": {
+        "mode": "paper",
+        "accent": {
+          "name": "dusk",
+          "hex": "#5A6A85"
+        },
+        "placeholder": true
+      },
+      "headerDirection": null,
+      "epigraph": {
+        "text": null,
+        "source": "generated",
+        "ref": "Chapter 5 is not briefed"
+      },
+      "heroes": [
+        {
+          "status": "placeholder",
+          "src": null,
+          "assetName": "Chapter 5 hero – the car as a work of art (TBC)",
+          "alt": {
+            "text": "Placeholder frame for the epilogue hero",
+            "source": "generated"
+          },
+          "aspect": "4:5"
+        }
+      ],
+      "modules": [
+        {
+          "label": {
+            "text": "The car as a work of art; event invitation",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 5"
+          },
+          "direction": {
+            "text": "The car as a work of art; event invitation",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 5 (story)",
+            "note": "The creative brief calls the vernissage 'still in the planning stage'. No format, dates or venues exist to draw on."
+          },
+          "beats": [
+            {
+              "text": null,
+              "source": "generated",
+              "ref": "Chapter 5 copy: not yet written; creative to supply (creative)"
+            }
+          ]
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "event-rsvp",
+          "kind": "rsvp",
+          "label": {
+            "text": "Event RSVP",
+            "source": "generated",
+            "ref": "Build Brief › Chapter structure, row 5 (Hotspots)"
+          },
+          "line": {
+            "text": null,
+            "source": "generated",
+            "ref": "Event details unconfirmed; none invented"
+          },
+          "at": {
+            "x": 50,
+            "y": 52
+          },
+          "videoAt": null
+        }
+      ],
+      "video": null,
+      "showCta": true
+    }
+  ]
+}

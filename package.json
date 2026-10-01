@@ -1,0 +1,35 @@
+{
+  "name": "gv90-chapter-book",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Making of GV90 – mobile-first interactive chapter book (internal pitch prototype)",
+  "scripts": {
+    "dev": "vite --host --port 5173",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host --port 4173",
+    "typecheck": "tsc --noEmit",
+    "verify:copy": "node scripts/verify-copy.mjs",
+    "extract:brief": "bash scripts/extract-brief.sh",
+    "placeholders": "node scripts/make-placeholders.mjs"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@react-three/fiber": "^9.8.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "ffmpeg-static": "^5.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1"
+  }
+}
