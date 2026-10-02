@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { BEAT_GAP, BEAT_LH, GUTTER, RAIL_H, SANS, SERIF, fitBeats, serif, wrapBalanced, wrapLines, type Insets } from "../book/layout";
+import { BEAT_GAP, BEAT_LH, DISPLAY_WEIGHT, GUTTER, RAIL_H, SANS, SERIF, fitBeats, serif, wrapBalanced, wrapLines, type Insets } from "../book/layout";
 import { PAGE_H, PAGE_W, READING_FIT } from "./constants";
 
 /**
@@ -213,8 +213,9 @@ const colors = (mode: Mode) =>
   mode === "paper" ? { fg: INK, muted: "#6a675f", bg: PAPER, frame: "#dedacf" } : { fg: "#f3efe6", muted: "#a8a59b", bg: INK_PAGE, frame: "#262420" };
 
 /* Baselines: where a font puts its baseline inside a line box of a given line-height. */
-const serifBase = (fs: number, lh: number) => ((lh - 1.211) / 2) * fs + 0.924 * fs;
-const sansBase = (fs: number, lh: number) => ((lh - 1.211) / 2) * fs + 0.969 * fs;
+// Urbanist: ascent 0.95, descent 0.25 (a content box of 1.2), measured with canvas fontBoundingBox. Both roles use it now.
+const serifBase = (fs: number, lh: number) => ((lh - 1.2) / 2) * fs + 0.95 * fs;
+const sansBase = (fs: number, lh: number) => ((lh - 1.2) / 2) * fs + 0.95 * fs;
 
 /* ---------- page drawing ---------- */
 
@@ -272,8 +273,8 @@ function drawHeader(
   y += 11 + 14.4;
   const fs = Math.min(49.6, Math.max(38.4, env.vw * 0.114));
   ctx.fillStyle = fg;
-  ctx.font = serif(fs, "normal", 500);
-  const lines = wrapBalanced(title, serif(fs, "normal", 500), env.vw - GUTTER * 2, ctx);
+  ctx.font = serif(fs, "normal", DISPLAY_WEIGHT);
+  const lines = wrapBalanced(title, serif(fs, "normal", DISPLAY_WEIGHT), env.vw - GUTTER * 2, ctx);
   lines.forEach((line, i) => ctx.fillText(line, x, y + fs * 1.02 * i + serifBase(fs, 1.02)));
   y += fs * 1.02 * lines.length;
   if (epigraph) {
@@ -489,7 +490,7 @@ function drawSealed(ctx: CanvasRenderingContext2D, spec: Extract<DrawPage, { typ
   const colW = maxW - GUTTER * 2;
   const x = g.colLeft + (env.vw - maxW) / 2 + GUTTER;
   const fs = Math.min(49.6, Math.max(38.4, env.vw * 0.114));
-  const titleLines = wrapBalanced(spec.title, serif(fs, "normal", 500), colW, ctx);
+  const titleLines = wrapBalanced(spec.title, serif(fs, "normal", DISPLAY_WEIGHT), colW, ctx);
   const teaserLines = wrapLines(spec.teaser, serif(22.4, "italic"), colW, ctx);
   const gap = 17.6;
   const blockH = 52 + gap + 11 + gap * 0.4 + fs * 1.02 * titleLines.length + gap + 7 + gap + 29.12 * teaserLines.length + gap * 0.5 + 11;
@@ -504,7 +505,7 @@ function drawSealed(ctx: CanvasRenderingContext2D, spec: Extract<DrawPage, { typ
   spaced(ctx, spec.eyebrow.toUpperCase(), x, y + sansBase(11, 1), 2.2);
   y += 11 + gap * 0.4;
   ctx.fillStyle = fg;
-  ctx.font = serif(fs, "normal", 500);
+  ctx.font = serif(fs, "normal", DISPLAY_WEIGHT);
   titleLines.forEach((line, i) => ctx.fillText(line, x, y + fs * 1.02 * i + serifBase(fs, 1.02)));
   y += fs * 1.02 * titleLines.length + gap;
   drawLamps(ctx, x, y, spec.accent, fg, 0.45);
@@ -647,12 +648,12 @@ function drawSlip(ctx: CanvasRenderingContext2D, w: number, h: number, title: st
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   let size = 96;
-  ctx.font = serif(size, "normal", 500);
+  ctx.font = serif(size, "normal", DISPLAY_WEIGHT);
   const target = h * 0.8;
   const measured = ctx.measureText(title).width;
   if (measured > target) {
     size = size * (target / measured);
-    ctx.font = serif(size, "normal", 500);
+    ctx.font = serif(size, "normal", DISPLAY_WEIGHT);
   }
   ctx.fillText(title, 0, 4);
   ctx.restore();
@@ -767,7 +768,7 @@ export function createBookTextures(opts: TextureOptions): BookTextures {
     async drawLabels() {
       // Canvas text needs the web fonts loaded first.
       await Promise.all([
-        document.fonts.load(`500 48px ${SERIF}`),
+        document.fonts.load(`300 48px ${SERIF}`),
         document.fonts.load(`italic 400 24px ${SERIF}`),
         document.fonts.load(`400 24px ${SERIF}`),
         document.fonts.load(`500 11px ${SANS}`),

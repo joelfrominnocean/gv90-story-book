@@ -97,7 +97,7 @@
 }
 .cover__title {
   margin: 0.4rem 0 0;
-  font: 500 clamp(2.4rem, 11vw, 3.2rem) / 1.04 var(--serif);
+  font: 300 clamp(2.4rem, 11vw, 3.2rem) / 1.04 var(--serif);
   letter-spacing: -0.01em;
   text-wrap: balance;
 }
@@ -248,7 +248,7 @@
 }
 .title {
   margin: 0;
-  font: 500 clamp(2.4rem, 11.4vw, 3.1rem) / 1.02 var(--serif);
+  font: 300 clamp(2.4rem, 11.4vw, 3.1rem) / 1.02 var(--serif);
   letter-spacing: -0.012em;
   text-wrap: balance;
 }
@@ -1069,7 +1069,7 @@
   color: var(--muted);
 }
 .libitem__title {
-  font: 500 1.65rem/1.1 var(--serif);
+  font: 300 1.65rem/1.1 var(--serif);
   letter-spacing: -0.005em;
 }
 .libitem__state {

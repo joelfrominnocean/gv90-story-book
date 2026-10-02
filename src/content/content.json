@@ -107,6 +107,80 @@
         "url": "https://www.news.com.au/technology/motoring/hitech/genesis-gv90-debuts-worldfirst-roof-airbag/news-story/202315b55dd2926d5e27259bde4b7caa"
       }
     ],
+    "tale": {
+      "title": {
+        "text": "The Sun and the Moon",
+        "source": "generated",
+        "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+        "flags": [
+          "verify-before-use"
+        ]
+      },
+      "titleKo": {
+        "text": "해와 달이 된 오누이",
+        "source": "generated",
+        "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+        "flags": [
+          "verify-before-use"
+        ]
+      },
+      "pages": [
+        {
+          "text": "Long ago, in a village under the mountains, a mother worked all day for a rich family. Each night she walked home over the hills with rice cakes for her two children, a brother and a sister.",
+          "source": "generated",
+          "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+          "flags": [
+            "fact-claim",
+            "verify-before-use"
+          ]
+        },
+        {
+          "text": "On the last hill a tiger stepped out of the dark. “Give me a rice cake, or I will eat you.” She gave him one and walked on. He found her again, and again, until the basket was empty. The tiger was still hungry, and the mother did not come home.",
+          "source": "generated",
+          "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+          "flags": [
+            "fact-claim",
+            "verify-before-use"
+          ]
+        },
+        {
+          "text": "The tiger put on her clothes and went to the house. “Children, open the door. It is Mother.” But the voice was rough, and the hand at the door was striped with fur. The brother and the sister slipped out the back and climbed the tall tree by the well.",
+          "source": "generated",
+          "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+          "flags": [
+            "fact-claim",
+            "verify-before-use"
+          ]
+        },
+        {
+          "text": "The tiger came to the foot of the tree and looked up at two small faces in the leaves. He tried to climb, and slipped. He tried again, and slipped again. The night was very long.",
+          "source": "generated",
+          "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+          "flags": [
+            "fact-claim",
+            "verify-before-use"
+          ]
+        },
+        {
+          "text": "The sister looked up at the sky. “Heaven, if you mean to save us, send us a strong rope. If you do not, send us a rotten one.” A strong rope came down out of the stars, and they climbed it, hand over hand. The tiger begged for a rope too, and a rotten one came, and it broke.",
+          "source": "generated",
+          "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+          "flags": [
+            "fact-claim",
+            "verify-before-use"
+          ]
+        },
+        {
+          "text": "The brother and the sister rose and rose, until they became the sun and the moon. They have crossed the sky ever since: one by day, one by night.",
+          "source": "generated",
+          "ref": "Korean folk tale 해와 달이 된 오누이 (The Sun and the Moon), retold for this prototype in new words. Tellings differ: a native speaker should check the wording, the framing and which version is told.",
+          "flags": [
+            "fact-claim",
+            "verify-before-use"
+          ]
+        }
+      ]
+    },
     "ui": {
       "begin": {
         "text": "Begin",
@@ -203,6 +277,26 @@
         "source": "generated",
         "ref": "Library wall (extension): button that zooms back in on the six books"
       },
+      "roomPlay": {
+        "text": "Play the record",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): label for the turntable when it is stopped"
+      },
+      "roomPause": {
+        "text": "Lift the needle",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): label for the turntable while a record plays"
+      },
+      "roomNextRecord": {
+        "text": "Next record",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): label for the stack of sleeves"
+      },
+      "roomJar": {
+        "text": "Moon jar",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): label for the moon jar you can tap"
+      },
       "prevChapter": {
         "text": "Previous chapter",
         "source": "generated",
@@ -242,6 +336,16 @@
         "text": "Next page",
         "source": "generated",
         "ref": "Build Brief › Source transparency (UI labels: generated)"
+      },
+      "roomCapTaleSub": {
+        "text": "A Korean folk tale",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): second line of the caption plate over the open book"
+      },
+      "roomCapChaptersSub": {
+        "text": "Folded into a screen",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): second line of the caption plate over the folding screen"
       }
     }
   },

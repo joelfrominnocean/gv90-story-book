@@ -1,0 +1,69 @@
+{
+  "_note": "Everything a client could change about the listening room's sound lives here. Replace a track by replacing its file and entry; status moves from placeholder to final when the music has been decided formally.",
+  "tracks": [
+    {
+      "title": "Amber Windowpane",
+      "file": "/assets/room/audio/01-amber-windowpane.mp3",
+      "mood": "afternoon",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -2.6
+    },
+    {
+      "title": "Candlelit at 70 BPM",
+      "file": "/assets/room/audio/02-candlelit-at-70-bpm.mp3",
+      "mood": "evening",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -3.8
+    },
+    {
+      "title": "Stacks of Quiet Books",
+      "file": "/assets/room/audio/03-stacks-of-quiet-books.mp3",
+      "mood": "evening",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -6
+    },
+    {
+      "title": "Midnight Amber Room",
+      "file": "/assets/room/audio/04-midnight-amber-room.mp3",
+      "mood": "night",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -5.1
+    },
+    {
+      "title": "Paper Lantern Rain",
+      "file": "/assets/room/audio/05-paper-lantern-rain.mp3",
+      "mood": "night",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -3.0
+    },
+    {
+      "title": "Rain on the Boulevard",
+      "file": "/assets/room/audio/06-rain-on-the-boulevard.mp3",
+      "mood": "night",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -3.2
+    },
+    {
+      "title": "Moon Through Bamboo",
+      "file": "/assets/room/audio/07-moon-through-bamboo.mp3",
+      "mood": "late night",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -5.6
+    },
+    {
+      "title": "Midnight Window Glow",
+      "file": "/assets/room/audio/08-midnight-window-glow.mp3",
+      "mood": "late night",
+      "status": "placeholder",
+      "source": "open-lofi, CC0, AI-generated (Suno v5) - github.com/btahir/open-lofi",
+      "gainDb": -4.5
+    }
+  ]
+}

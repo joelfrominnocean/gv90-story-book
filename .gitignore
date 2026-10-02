@@ -21,3 +21,6 @@ public/assets/fire/
 # Blender renders and scene caches are working files, not for the repo
 renders/
 waveletNoiseTile.bin
+
+# Audition copies of third-party rain recordings (licences not yet traced): to listen to, never to publish
+public/assets/room/audition/

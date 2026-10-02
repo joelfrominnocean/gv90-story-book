@@ -75,6 +75,93 @@ In dev, `window.__book` exposes the rig. `__book.rig.frozen = true` plus setting
 
 2D fallback: same pages, same navigation, crossfade between pages. three.js is not even downloaded in that mode.
 
+### v2: the listening room (`src/room`, branch `v2-listening-room`) – the default library on this branch
+
+v1 (tag `v1`, still what `main` serves) is the bookcase wall below. v2 explores a different idea: **a place worth being in**, a rainy
+night in a private listening room that you could leave open. It is a proactive best attempt, so everything a client could change is
+data and nothing here is final:
+
+- **The room** is one scene, wider than the screen (drag to look along it; the city behind the glass moves slower than the room, which is
+  what makes the window deep). Flat-colour SVG with ink outlines (`RoomArt.tsx`): **the art is a scamp** and is to be replaced by an
+  illustrator's style frame. Every object is placed in one coordinate system, so a new drawing slots in.
+- **Rain on the glass** (`RainGlass.tsx`): beads that grow, run in stops and starts, and join; a canvas the size of the window at 30 fps, paused when the
+  tab is hidden or a book is open. Lightning is rare (first after ~20 s, then every minute or two), with thunder a few seconds behind it.
+  The city's window lights change one at a time every few seconds. The room moves from late afternoon to night as more chapters are open (`palette.ts`).
+- **The record** (`Turntable.tsx`, `roomAudio.ts`): tap the turntable and the arm swings over, the needle lands (thump, crackle) and the music fades in.
+  That tap is also what lets a phone browser play sound at all. Tap the sleeve beside it for the next record, the moon jar to hear it ring.
+  Rain, crackle, thunder and the jar's tone are all synthesised in Web Audio (no files); the music is a plain `<audio>` element, so it can carry on
+  with the Media Session controls. Sound steps back while a book is open.
+- **The six frames on the wall are the chapters** (one container for the approved copy; everything else is atmosphere with no product claims). An open
+  chapter is a poster; one that has not arrived is an empty frame with a brass plate showing its date. No counters, no "locked". A poster you have not
+  opened yet glows faintly. Picking one dims the room and the real 3D book comes down and opens (same `Stage3D` wall mode as v1).
+- **Music is a placeholder**: `src/room/room.manifest.json` lists eight tracks from [open-lofi](https://github.com/btahir/open-lofi) (CC0, but
+  **AI-generated with Suno**), with a per-track level correction. They are files in `public/assets/room/audio/` (25MB). Formal music (commissioned or
+  licensed, with sync and master clearance) replaces them by replacing the files and entries and flipping `status` to `final`.
+- **The folk tale** (`TaleBook.tsx`, `TaleArt.tsx`): the open book on the credenza opens *The Sun and the Moon* (해와 달이 된 오누이) as six illustrated pages
+  with paper-turn sounds. The wording is a retelling in new words, tagged `generated` + `verify-before-use` in `content.json` (`meta.tale`): tellings differ, so a
+  native speaker should check the wording, the framing and which version is told. The drawings are scamp SVG in the room's style, to be redrawn.
+- **Type:** Urbanist replaces Cormorant Garamond and Inter everywhere (HTML and the canvas that prints the 3D leaves). It is the Google font nearest to
+  Genesis Sans, which genesis.com loads as two proprietary families (`GenesisSansHead` 300/400, uppercase and light for headings; `GenesisSansText` 400/500/700
+  for text). Measured in the live page, its widths for headings and text agree with Genesis's to about 1.5% and its x-height to within 0.03. Runner-up: Hanken
+  Grotesk (warmer for body text). Baseline constants for the canvas printing live in `textures.ts` (ascent 0.95, descent 0.25).
+- **Rain** (`rainSynth.ts`): thousands of separate synthesised impacts (glass ticks, leaf splashes, roof thuds, a few heavy drips) scattered through long stereo buffers of
+  different lengths, plus a quiet distant wash that gusts. **Every impact is a burst of noise through a broad filter, never a sine**: a pitched "plink" rings like a bell
+  once a hundred land a second (an earlier version did exactly that, and it was the weird bell sound). A dev check compares each layer's spectral peak to its median:
+  about 5 for the glass layer, against thousands for sine plinks. The glass layer's peakiness (kurtosis) is about 13 where white noise is 3. Tuned twice for calm: fine, close-packed drops (hundreds a second) with a narrow loudness range, soft onsets, no loud thuds, a steady wash underneath, and the
+  top of the rain rolled off at 4.2 kHz on its bus (glass layer peakiness about 5, its loudest moments under 2x the typical level). The rain's overall level is one constant, `RAIN_TRIM` in `roomAudio.ts` (0.75, a quarter off), which applies to the synthetic rain and to an audition
+  recording alike. It is still a stand-in for a
+  real recording, and I cannot hear it, so listen before you trust it.
+- **The glasshouse, as layers** (default room when built; `?room=svg` shows the earlier flat vector room): the Blender scene
+  (`scripts/blender/listening_room.py`, `glasshouse_layers.py`) is rendered as 22 separate transparent layers plus a manifest, and
+  `src/room/GlasshouseRoom.tsx` assembles them in a drag-to-pan scene with parallax. Rebuild: `LAYERS=1 MOOD=teal OUTDIR=renders/glasshouse RES=1 SAMPLES=40
+  /Applications/Blender.app/Contents/MacOS/Blender -b -noaudio --python scripts/blender/listening_room.py` (about 3 minutes), then `node scripts/make-glasshouse-assets.mjs`
+  (WebP files into `public/assets/room/glasshouse/`, about 0.5MB, and `src/room/glasshouse.manifest.json`). `ONLY=chair,jar` renders just those layers, but writes an
+  incomplete manifest, so run the converter only after a full render.
+  - **The look (`STYLE=film`, the default):** an architect's house at dusk, not a drawn world. Physically based, procedural materials (`film_materials.py`): oiled
+    walnut with grain, linen with a woven surface, honed stone, glazed ceramic (the moon jar very faintly crazed), brushed brass, dark polished floor, wool, leaves.
+    Designed pieces (`furniture_film.py`): a fluted walnut credenza on splayed legs with brass bar pulls, a Jeanneret-style lounge chair, a ceramic lamp with a linen
+    drum shade, foliage built leaf by leaf, glazing on a stone upstand under slim bronze-steel ribs. Soft filmic light (AgX): a cool dusk key, a cool bounce from the
+    camera's side, a low warm rim from the horizon, and amber only at the lamp and a thin line of horizon. No outlines, no halftone. The sky plates keep a light
+    painterly (Kuwahara) finish and exact painted colours. The Korean notes are objects (moon jar, bonsai, tea set, the folding screen, the folk-tale book) and a faint
+    old-town roofline at the horizon; no pagoda, no lanterns. Palette (locked): shadows #0F1F24, foliage #3E5A4A, brass #B08D57, paper #E8DFCF, amber #E0A458.
+  - **Other looks, behind flags:** `STYLE=toon` is the earlier inked, banded look (the approved baseline of that round); `STYLE=sable` is a cel-shaded experiment
+    (two hard tones, thresholded-noise patches, sparse stipple, tinted ink at every change of tone, drawn by a compositor edge pass); `GATE=1`, `LANTERNS=1` and
+    `SCREEN_ART=1` bring back the palace gate, hanging hanji lanterns and the five-peaks painting on the screen. All were judged too themed for the brief.
+  - **Every object is a swappable layer.** The manifest gives each an id, a box on the frame (fractions), a depth (`par`, 1 = moves with the room, below 1 =
+    far away), a z-order, a hit area where it is touchable, and an image path. An illustrator's art replaces any one by dropping in a transparent image of
+    the same box, with no code change: sky (three times of day, wider than the frame for parallax), floor, credenza, turntable base, platter, tonearm, sleeve, lamp,
+    tea table, the folk-tale book, moon jar, chair, camellia, bonsai, plants, the folding screen, desk, the big fern, frame. The manifest also lists the places the opening
+    pan visits and that words appear near (`focus`).
+  - **Glass:** clear in the picture. `glassmask` is a small lossless image that is opaque wherever you can see glass (furniture and plants in front of it cut out), and
+    the page draws the weather inside it: a faint smoked tint, the rain, and the lightning. The frame layer is rendered with every object held out of it, so it sits
+    on top of everything without covering anything.
+  - **The folding screen** (one panel per chapter) is the one place the page draws into the picture: the manifest holds the four corners of each panel's poster
+    area, and `PosterFace` (poster, or a dark frame with a brass date plate) is warped onto it with a CSS matrix from data. State comes from the chapter's unlock
+    date, as everywhere else; no counters, no "locked" wording.
+  - **Turntable:** drawn from a little above, with the platter and tonearm drawn flat from straight above, so the page can turn one and swing the other (squashed by
+    `sin(elevation)` to match). Tapping it (the platter and arm only, never the whole sprite) swings the arm, plays the crackle, fades the music in and spins the platter up
+    to 33 1/3 rpm; that tap is also the audio unlock, and a small plate names the record while it plays. **Only the turntable and the sleeve start music.** The moon jar
+    only rings (its own bus, straight to the output; it never starts the rain or a record or touches the Sound switch); the tea table does nothing.
+  - **The interface is nearly silent (by design):** a title card at the start (the title and the one approved line) that fades after about five seconds or at the first touch,
+    a tiny speaker icon (no word; its label is for screen readers) and nothing else standing on the room. The room speaks when you come near: the folding screen says
+    "Folded into a screen" and the book says its title and "A Korean folk tale", each once per visit (about four seconds), in one caption slot at the bottom of the
+    screen, so labels cannot overlap. While a record plays its title sits in the same slot. The book is the tap target for the tale (it glows faintly until first opened). On a first
+    visit the view also drifts, wordlessly, to the screen, then the book, then home (`?tour=1` plays it again, `?tour=0` never; any touch ends it). No counters, no "locked" wording.
+    All of that copy is `generated` in `content.json`.
+  - **Rain** (`GlassRain.tsx`): sparse falling streaks at three distances (short, slow and faint far away; a few long ones near), plus small beads and a few runners that
+    join, at 0.6 of the pixels and 30 fps, only while the tab is visible and no book is open. The room pauses when hidden while the audio carries on, and the Media Session
+    controls (play, pause, next, previous) are set.
+  - **Rain audition (`?rain=<name>`):** plays `public/assets/room/audition/<name>.mp3` in place of the synthesised rain: looped with a 4-second equal-power crossfade so
+    there is no seam, set to about the synthetic rain's loudness, with the softening filter bypassed. The two files there now, `rain-on-window` (52 s) and `light-rain`
+    (3 min 56 s), are from [Moodist](https://github.com/remvze/moodist) (MIT code; its README says its sounds are a mix of Pixabay Content License and CC0 with no per-file list, so
+    their licences are untraced). The folder is gitignored, so they never reach the public repo, and the page falls back to the synthetic rain if a file is missing.
+    Before anything ships: trace each file to its source, or replace it with a recording whose licence is clear (a CC0 loop, or one recorded for this project).
+  - **Time of day:** the sky crossfades late afternoon, dusk, night as more chapters arrive (one faint moon in all three); a night tint and the lamp's strength follow.
+  - **Replacing a layer with the illustrator's art** needs only the file; a changed composition needs a re-render of the manifest (or edit its boxes).
+- **Not built yet:** the illustrator's art (everything in the layers is a scamp), real field recordings, session-length tracking, a full-width layout on desktop,
+  a lightning plate for the sky (the flash is a CSS overlay for now), more of the Seoul skyline as real art.
+- `?library=wall` shows v1's bookcase wall on this branch, for comparison.
+
 ### The library wall (`src/wall`) – the default library
 
 The library is **one wide picture of a whole bookcase wall** (7.2 units across, three bays) with the fireplace as the small middle bay

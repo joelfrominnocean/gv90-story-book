@@ -17,6 +17,8 @@ export default defineConfig({
     // The library wall (a Blender render of the room) and the fire footage that plays in its fireplace.
     __HAS_WALL__: JSON.stringify(has("public/assets/room/wall.webp")),
     __HAS_FIRE_VIDEO__: JSON.stringify(has("public/assets/room/fire.mp4")),
+    // The glasshouse listening room as layers (built by scripts/blender + scripts/make-glasshouse-assets.mjs).
+    __HAS_GLASSHOUSE__: JSON.stringify(has("public/assets/room/glasshouse/frame.webp")),
   },
   plugins: [react()],
   server: { host: true, port: 5173, strictPort: true },

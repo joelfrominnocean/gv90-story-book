@@ -1,0 +1,498 @@
+{
+ "aspect": 2.4,
+ "layers": [
+  {
+   "id": "sky_late",
+   "box": [
+    -0.13,
+    0,
+    1.13,
+    1
+   ],
+   "par": 0.72,
+   "z": 0,
+   "kind": "sky",
+   "state": "late",
+   "src": "/assets/room/glasshouse/sky_late.webp"
+  },
+  {
+   "id": "sky_dusk",
+   "box": [
+    -0.13,
+    0,
+    1.13,
+    1
+   ],
+   "par": 0.72,
+   "z": 0,
+   "kind": "sky",
+   "state": "dusk",
+   "src": "/assets/room/glasshouse/sky_dusk.webp"
+  },
+  {
+   "id": "sky_night",
+   "box": [
+    -0.13,
+    0,
+    1.13,
+    1
+   ],
+   "par": 0.72,
+   "z": 0,
+   "kind": "sky",
+   "state": "night",
+   "src": "/assets/room/glasshouse/sky_night.webp"
+  },
+  {
+   "id": "floor",
+   "box": [
+    0,
+    0,
+    1,
+    1
+   ],
+   "par": 1,
+   "z": 5,
+   "kind": "floor",
+   "src": "/assets/room/glasshouse/floor.webp"
+  },
+  {
+   "id": "plants",
+   "box": [
+    0.13299,
+    0.49099,
+    0.88699,
+    0.82142
+   ],
+   "par": 1,
+   "z": 10,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/plants.webp"
+  },
+  {
+   "id": "bonsai",
+   "box": [
+    0.24311,
+    0.38588,
+    0.32297,
+    0.69032
+   ],
+   "par": 1,
+   "z": 12,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/bonsai.webp"
+  },
+  {
+   "id": "screen",
+   "box": [
+    0.47349,
+    0.35841,
+    0.65645,
+    0.64119
+   ],
+   "par": 1,
+   "z": 14,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/screen.webp"
+  },
+  {
+   "id": "credenza",
+   "box": [
+    0.40042,
+    0.53562,
+    0.60188,
+    0.72079
+   ],
+   "par": 1,
+   "z": 16,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/credenza.webp"
+  },
+  {
+   "id": "tt_base",
+   "box": [
+    0.45222,
+    0.49961,
+    0.52502,
+    0.60354
+   ],
+   "par": 1,
+   "z": 17,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/tt_base.webp"
+  },
+  {
+   "id": "tt_platter",
+   "box": [
+    0.45971,
+    0.48701,
+    0.50371,
+    0.59261
+   ],
+   "par": 1,
+   "z": 18,
+   "kind": "platter",
+   "src": "/assets/room/glasshouse/tt_platter.webp"
+  },
+  {
+   "id": "tt_arm",
+   "box": [
+    0.50233,
+    0.5065,
+    0.53469,
+    0.5264
+   ],
+   "pivot": [
+    0.28826,
+    0.5
+   ],
+   "par": 1,
+   "z": 19,
+   "kind": "arm",
+   "src": "/assets/room/glasshouse/tt_arm.webp"
+  },
+  {
+   "id": "sleeve",
+   "box": [
+    0.52536,
+    0.48789,
+    0.56349,
+    0.58013
+   ],
+   "par": 1,
+   "z": 20,
+   "kind": "object",
+   "interact": "sleeve",
+   "hit": [
+    0.52536,
+    0.48789,
+    0.56349,
+    0.58013
+   ],
+   "src": "/assets/room/glasshouse/sleeve.webp"
+  },
+  {
+   "id": "lamp",
+   "box": [
+    0.41707,
+    0.44793,
+    0.4769,
+    0.57798
+   ],
+   "par": 1,
+   "z": 22,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/lamp.webp"
+  },
+  {
+   "id": "tea",
+   "box": [
+    0.41263,
+    0.58577,
+    0.50868,
+    0.76778
+   ],
+   "par": 1,
+   "z": 24,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/tea.webp"
+  },
+  {
+   "id": "book",
+   "box": [
+    0.42,
+    0.60501,
+    0.4889,
+    0.64899
+   ],
+   "par": 1,
+   "z": 25,
+   "kind": "object",
+   "interact": "tale",
+   "hit": [
+    0.424,
+    0.60901,
+    0.4849,
+    0.64499
+   ],
+   "src": "/assets/room/glasshouse/book.webp"
+  },
+  {
+   "id": "jar",
+   "box": [
+    0.58884,
+    0.52985,
+    0.67215,
+    0.74986
+   ],
+   "par": 1,
+   "z": 26,
+   "kind": "object",
+   "interact": "jar",
+   "hit": [
+    0.59284,
+    0.53385,
+    0.66815,
+    0.74586
+   ],
+   "src": "/assets/room/glasshouse/jar.webp"
+  },
+  {
+   "id": "chair",
+   "box": [
+    0.30711,
+    0.51943,
+    0.44244,
+    0.8241
+   ],
+   "par": 1,
+   "z": 28,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/chair.webp"
+  },
+  {
+   "id": "camellia",
+   "box": [
+    0.15818,
+    0.38006,
+    0.28334,
+    0.67131
+   ],
+   "par": 1,
+   "z": 30,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/camellia.webp"
+  },
+  {
+   "id": "desk",
+   "box": [
+    0.69671,
+    0.56638,
+    0.81743,
+    0.75441
+   ],
+   "par": 1.1,
+   "z": 34,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/desk.webp"
+  },
+  {
+   "id": "fern_front",
+   "box": [
+    0,
+    0.55898,
+    0.60446,
+    1
+   ],
+   "par": 1.15,
+   "z": 40,
+   "kind": "object",
+   "src": "/assets/room/glasshouse/fern_front.webp"
+  },
+  {
+   "id": "glassmask",
+   "box": [
+    0,
+    0,
+    1,
+    1
+   ],
+   "par": 1,
+   "z": 50,
+   "kind": "mask",
+   "src": "/assets/room/glasshouse/glassmask.webp"
+  },
+  {
+   "id": "frame",
+   "box": [
+    0,
+    0,
+    1,
+    1
+   ],
+   "par": 1,
+   "z": 52,
+   "kind": "frame",
+   "src": "/assets/room/glasshouse/frame.webp"
+  }
+ ],
+ "mood": "teal",
+ "tt": {
+  "squash": 0.5878,
+  "armPlay": 131.2,
+  "armRest": 82,
+  "armLength": 0.27
+ },
+ "posters": [
+  {
+   "n": 0,
+   "quad": [
+    [
+     0.48993,
+     0.4173
+    ],
+    [
+     0.50836,
+     0.41798
+    ],
+    [
+     0.50835,
+     0.49874
+    ],
+    [
+     0.48994,
+     0.49897
+    ]
+   ]
+  },
+  {
+   "n": 1,
+   "quad": [
+    [
+     0.51506,
+     0.41785
+    ],
+    [
+     0.53145,
+     0.41649
+    ],
+    [
+     0.53141,
+     0.49926
+    ],
+    [
+     0.51504,
+     0.49878
+    ]
+   ]
+  },
+  {
+   "n": 2,
+   "quad": [
+    [
+     0.5416,
+     0.41629
+    ],
+    [
+     0.55975,
+     0.41699
+    ],
+    [
+     0.55968,
+     0.49908
+    ],
+    [
+     0.54154,
+     0.49933
+    ]
+   ]
+  },
+  {
+   "n": 3,
+   "quad": [
+    [
+     0.56667,
+     0.41686
+    ],
+    [
+     0.58452,
+     0.41546
+    ],
+    [
+     0.58441,
+     0.49962
+    ],
+    [
+     0.56658,
+     0.49913
+    ]
+   ]
+  },
+  {
+   "n": 4,
+   "quad": [
+    [
+     0.59501,
+     0.41525
+    ],
+    [
+     0.61286,
+     0.41597
+    ],
+    [
+     0.61271,
+     0.49944
+    ],
+    [
+     0.59489,
+     0.49969
+    ]
+   ]
+  },
+  {
+   "n": 5,
+   "quad": [
+    [
+     0.62,
+     0.41584
+    ],
+    [
+     0.63941,
+     0.41439
+    ],
+    [
+     0.63923,
+     0.49999
+    ],
+    [
+     0.61985,
+     0.49948
+    ]
+   ]
+  }
+ ],
+ "lamp": {
+  "u": 0.44679,
+  "v": 0.48171
+ },
+ "home": {
+  "u": 0.47137,
+  "v": 0.57548
+ },
+ "focus": {
+  "book": {
+   "u": 0.45412,
+   "v": 0.60892
+  },
+  "record": {
+   "u": 0.48862,
+   "v": 0.54205
+  },
+  "screen": {
+   "u": 0.56306,
+   "v": 0.47075
+  },
+  "jar": {
+   "u": 0.62995,
+   "v": 0.60657
+  },
+  "moon": {
+   "u": 0.5796,
+   "v": 0.15058
+  }
+ },
+ "plates": {
+  "tale": {
+   "u": 0.45404,
+   "v": 0.49105
+  },
+  "screen": {
+   "u": 0.56318,
+   "v": 0.3538
+  }
+ },
+ "frame": {
+  "w": 4320,
+  "h": 1800
+ }
+}

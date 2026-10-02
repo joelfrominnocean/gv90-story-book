@@ -5,8 +5,9 @@
   --ink: #15130f;
   --moon: #a8a59b;
 
-  --serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Genesis uses one sans family in two cuts, so display and text are both Urbanist here. (--serif keeps its name from before the swap.) */
+  --serif: "Urbanist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sans: "Urbanist", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Slow and deliberate: ease-out only, nothing bouncy. */

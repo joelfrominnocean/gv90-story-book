@@ -133,6 +133,8 @@ export const Content = z
       creativeBrief: z.object({ job: z.string(), version: z.string() }),
       ryiUrl: z.object({ url: z.string().url(), ref: z.string() }),
       sealedTeaser: Str,
+      /** A short illustrated folk tale in the listening room. Atmosphere, not product content: nothing in it is a claim about the car. */
+      tale: z.object({ title: Str, titleKo: Str, pages: z.array(Str).min(1) }).optional(),
       cta: z.object({ label: Str, ryiLabel: Str }),
       openFlags: z.array(z.object({ id: z.string(), note: z.string() })),
       sources: z.array(
@@ -161,6 +163,6 @@ export type Content = z.output<typeof Content>;
 export const REQUIRED_UI_KEYS = [
   "begin", "loading", "eyebrowChapter", "eyebrowPrologue", "eyebrowEpilogue", "sealed", "opensOn", "dateTbc",
   "watch", "play", "pause", "close", "captionsOn", "captionsOff", "tapForSound", "soundOn", "soundOff",
-  "prevChapter", "nextChapter", "railLabel", "videoLabel", "library", "pageOf", "prevPage", "nextPage", "wallOverview", "wallFocus",
+  "prevChapter", "nextChapter", "railLabel", "videoLabel", "library", "pageOf", "prevPage", "nextPage", "wallOverview", "wallFocus", "roomPlay", "roomPause", "roomNextRecord", "roomJar", "roomCapTaleSub", "roomCapChaptersSub",
 ] as const;
 export type UiKey = (typeof REQUIRED_UI_KEYS)[number];

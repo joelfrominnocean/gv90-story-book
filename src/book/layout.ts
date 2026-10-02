@@ -18,8 +18,11 @@ export interface Insets {
   bottom: number;
 }
 
-export const SERIF = '"Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", Georgia, serif';
-export const SANS = 'Inter, system-ui, -apple-system, "Segoe UI", sans-serif';
+// Genesis uses one sans family in two cuts; here both roles are Urbanist (the names SERIF/SANS date from before the swap).
+export const SERIF = 'Urbanist, system-ui, -apple-system, "Segoe UI", sans-serif';
+export const SANS = 'Urbanist, system-ui, -apple-system, "Segoe UI", sans-serif';
+/** Headings are light, as on genesis.com (Genesis Sans Head 300). */
+export const DISPLAY_WEIGHT = 300;
 
 export const serif = (fs: number, style: "normal" | "italic" = "normal", weight = 400): string =>
   `${style === "italic" ? "italic " : ""}${weight} ${fs}px ${SERIF}`;

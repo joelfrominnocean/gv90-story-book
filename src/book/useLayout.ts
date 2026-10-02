@@ -23,7 +23,7 @@ export function useFontsReady(): boolean {
     let alive = true;
     void Promise.all([
       document.fonts.load(`400 24px ${SERIF}`),
-      document.fonts.load(`500 24px ${SERIF}`),
+      document.fonts.load(`300 24px ${SERIF}`),
       document.fonts.load(`italic 400 24px ${SERIF}`),
       document.fonts.load(`500 11px ${SANS}`),
     ])

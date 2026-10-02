@@ -1,10 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@fontsource/cormorant-garamond/400.css";
-import "@fontsource/cormorant-garamond/500.css";
-import "@fontsource/cormorant-garamond/400-italic.css";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/500.css";
+// Urbanist is the nearest Google font to Genesis Sans (Head, light and uppercase-friendly; Text, regular and medium): the widths and
+// x-height measured on genesis.com agree to within about 1.5%. See README.
+import "@fontsource/urbanist/300.css";
+import "@fontsource/urbanist/400.css";
+import "@fontsource/urbanist/500.css";
+import "@fontsource/urbanist/600.css";
+import "@fontsource/urbanist/400-italic.css";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/book.css";

@@ -1,0 +1,611 @@
+/* ============ The listening room (v2 scamp) ============ */
+.room {
+  position: absolute;
+  inset: 0;
+  /* clip, not hidden: a hidden container can still be scrolled by focus or a drag, which silently shifts the whole picture off its hit areas */
+  overflow: hidden;
+  overflow: clip;
+  background: #0d0c0a;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: grab;
+}
+.room:active {
+  cursor: grabbing;
+}
+/* A book is down, or the tab is hidden: nothing here needs to move. */
+.room[data-paused="true"] * {
+  animation-play-state: paused !important;
+}
+.room[data-paused="true"] {
+  visibility: hidden;
+  transition: visibility 0s 0.4s;
+}
+.room__scene {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+.room__city,
+.room__glass,
+.room__turntable,
+.room__night,
+.room__lamp,
+.room__ripple,
+.room__taleglow,
+.room__pglow {
+  position: absolute;
+  pointer-events: none;
+}
+.room__citysvg,
+.room__art,
+.room__turntable svg {
+  position: absolute;
+  display: block;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.room__art {
+  inset: 0;
+}
+.room__city {
+  overflow: hidden;
+}
+/* The flash: the whole city goes pale blue for a moment, then the thunder comes a few seconds later. */
+.room__citysvg.is-lit {
+  filter: brightness(2.1) saturate(0.6);
+}
+.room-win {
+  fill-opacity: 1;
+}
+.room__glass {
+  overflow: hidden;
+}
+.room__rain {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.room__flash {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(ellipse at 60% 30%, rgba(214, 230, 255, 0.95), rgba(150, 180, 235, 0.55) 60%, rgba(120, 150, 210, 0.3));
+  mix-blend-mode: screen;
+}
+.room__flash.is-on {
+  animation: room-flash 1s ease-out;
+}
+@keyframes room-flash {
+  0% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.85;
+  }
+  14% {
+    opacity: 0.18;
+  }
+  22% {
+    opacity: 0.7;
+  }
+  60%,
+  100% {
+    opacity: 0;
+  }
+}
+.room__night {
+  inset: 0;
+  background: #07060e;
+  opacity: var(--night);
+  transition: opacity 1.4s;
+}
+.room__lamp {
+  background: radial-gradient(circle at center, rgba(255, 178, 86, 0.62) 0, rgba(255, 150, 60, 0.24) 32%, transparent 66%);
+  mix-blend-mode: screen;
+  opacity: calc(var(--lamp) + var(--boost, 0) * 0.14);
+  transition: opacity 1.8s;
+  animation: room-breathe 7s ease-in-out infinite;
+}
+@keyframes room-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+/* A poster that has arrived and has not been opened yet gives off a little light. */
+.room__pglow {
+  border-radius: 6px;
+  background: radial-gradient(ellipse at center, rgba(255, 224, 160, 0.42), rgba(255, 210, 140, 0.14) 55%, transparent 75%);
+  mix-blend-mode: screen;
+  animation: room-glow 5.2s ease-in-out infinite;
+}
+@keyframes room-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.room__ripple {
+  border-radius: 50%;
+  border: 2px solid rgba(255, 244, 214, 0.7);
+  mix-blend-mode: screen;
+  animation: room-ripple 1.6s ease-out forwards;
+}
+@keyframes room-ripple {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.room__hot {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.room__hot li {
+  position: absolute;
+}
+.room__btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.room__btn:focus-visible {
+  outline: 2px solid #ffe3a6;
+  outline-offset: 3px;
+}
+/* The turntable gives a slow, wordless hint until the first record plays: the lamp breathes. (It is the lamp's own animation.) */
+
+.room__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 52%, transparent 48%, rgba(5, 4, 8, 0.6) 100%);
+}
+.room__dim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #0d0c0a;
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-out);
+}
+.room__dim[data-on="true"] {
+  opacity: 0.94;
+}
+
+/* The overlay. A title card at the start (the title and the one approved line) that fades away; a small sound icon; nothing else. */
+.library--room .library__sound {
+  position: absolute;
+  right: calc(var(--gutter) - 0.7rem);
+  left: auto;
+  bottom: auto;
+  top: calc(0.2rem + env(safe-area-inset-top, 0px));
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-height: 0;
+  padding: 0;
+  color: rgba(246, 243, 236, 0.46);
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.8));
+  transition: color 0.4s;
+}
+.library--room .library__sound[aria-pressed="true"] {
+  color: rgba(246, 243, 236, 0.78);
+}
+.library--room .library__sound:focus-visible {
+  outline: 1px solid rgba(246, 243, 236, 0.7);
+  outline-offset: -6px;
+  border-radius: 50%;
+}
+.library--room .library__note {
+  bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
+  left: var(--gutter);
+  right: var(--gutter);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.8);
+}
+.library--room .title {
+  max-width: 11ch;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.85);
+}
+/* the title card goes after a few seconds, or at the first touch; hidden (not just faint) once it has gone */
+.library--room .library__head,
+.library--room .library__note {
+  transition: opacity 1.6s ease, visibility 0s linear 0s;
+}
+.library--room[data-intro="false"] .library__head,
+.library--room[data-intro="false"] .library__note {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.6s ease, visibility 0s linear 1.6s;
+}
+
+/* ---- the one slot for words in the room: what you have come near (one at a time, said once), and the record that is playing ---- */
+.gh__caps {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(15% + env(safe-area-inset-bottom, 0px));
+  z-index: 70;
+  display: grid;
+  justify-items: center;
+  row-gap: 0.55rem;
+  padding: 0 var(--gutter);
+  pointer-events: none;
+  text-align: center;
+  text-shadow: 0 1px 12px rgba(4, 9, 13, 0.95), 0 0 3px rgba(4, 9, 13, 0.7);
+}
+.gh__cap,
+.gh__now {
+  margin: 0;
+  color: #efe6d2;
+  opacity: 0;
+  transition: opacity 1.1s ease;
+}
+.gh__cap {
+  grid-row: 1; /* the two things you can come near share this row: only one is ever up */
+  grid-column: 1;
+  font: italic 400 1rem/1.3 var(--serif, "Urbanist", sans-serif);
+  letter-spacing: 0.01em;
+}
+.gh__cap--tale {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.gh__cap--tale span {
+  font: 400 0.6875rem/1.2 var(--sans, "Urbanist", sans-serif);
+  font-style: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(239, 230, 210, 0.66);
+}
+.gh__now {
+  grid-row: 2;
+  font: 400 0.6875rem/1.2 var(--sans, "Urbanist", sans-serif);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(239, 230, 210, 0.58);
+}
+.gh__cap[data-on="true"],
+.gh__now[data-on="true"] {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .room__lamp,
+  .room__pglow {
+    animation: none;
+  }
+}
+
+/* ============ The folk tale ============ */
+.tale {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  background: #efe9dc;
+  color: #15130f;
+  background-image: var(--hanji-texture);
+  animation: tale-open 0.7s var(--ease-out) both;
+  touch-action: pan-y;
+}
+@keyframes tale-open {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.tale__stage {
+  position: relative;
+  flex: 0 0 56%;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(21, 19, 15, 0.5);
+}
+.tale__pic {
+  position: absolute;
+  inset: 0;
+  animation: tale-in 0.7s var(--ease-out) both;
+}
+.tale__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@keyframes tale-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--d, 1) * 18px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.tale__pic[data-dir="-1"],
+.tale__text[data-dir="-1"] {
+  --d: -1;
+}
+.tale__zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 34%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.tale__zone--prev {
+  left: 0;
+}
+.tale__zone--next {
+  right: 0;
+}
+.tale__zone:disabled {
+  cursor: default;
+}
+.tale__text {
+  flex: 1;
+  min-height: 0;
+  padding: 1.4rem var(--gutter) 0;
+  overflow: hidden;
+  animation: tale-in 0.7s var(--ease-out) 0.08s both;
+}
+.tale__eyebrow {
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+  margin: 0 0 0.8rem;
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6a675f;
+}
+.tale__eyebrow [lang="ko"] {
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-size: 0.78rem;
+}
+.tale__p {
+  margin: 0;
+  font: 300 clamp(1.2rem, 5.4vw, 1.45rem) / 1.4 var(--serif);
+  text-wrap: pretty;
+}
+.tale__foot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem var(--gutter) calc(0.9rem + env(safe-area-inset-bottom, 0px));
+}
+.tale__count {
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6a675f;
+}
+.tale__nav,
+.tale__close {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  background: none;
+  font: 300 1.5rem/1 var(--sans);
+  color: #15130f;
+  cursor: pointer;
+}
+.tale__nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.tale__close {
+  position: absolute;
+  top: calc(0.5rem + env(safe-area-inset-top, 0px));
+  right: calc(var(--gutter) - 0.7rem);
+  color: #f4eed9;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  font-size: 1.8rem;
+}
+.tale__nav:focus-visible,
+.tale__close:focus-visible,
+.tale__zone:focus-visible {
+  outline: 2px solid #b38f4a;
+  outline-offset: -4px;
+}
+.tale__rope {
+  transform-origin: 200px 0;
+  animation: tale-sway 6s ease-in-out infinite alternate;
+}
+@keyframes tale-sway {
+  from {
+    transform: rotate(-1.4deg);
+  }
+  to {
+    transform: rotate(1.4deg);
+  }
+}
+/* The open book on the credenza glows until it has been read once. */
+.room__taleglow {
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 222, 150, 0.5), rgba(255, 200, 120, 0.16) 55%, transparent 75%);
+  mix-blend-mode: screen;
+  animation: room-glow 5.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tale__pic,
+  .tale__text,
+  .tale {
+    animation: none;
+  }
+  .tale__rope {
+    animation: none;
+  }
+}
+
+/* ============ The glasshouse: layers ============ */
+.gh__layer {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+}
+.gh__layer img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.gh__sky {
+  transition: opacity 2.4s ease;
+}
+.gh.is-lit .gh__sky img,
+.room__scene.is-lit .gh__sky img {
+  filter: brightness(2) saturate(0.6);
+}
+.gh__hit,
+.gh__poster-hit {
+  position: absolute;
+  pointer-events: auto;
+}
+/* the tap target is a little larger than what it covers, so that a thumb finds it */
+.gh__hit::after,
+.gh__poster-hit::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+}
+.gh__poster {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+.gh__pglow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 8px;
+  background: radial-gradient(ellipse at center, rgba(255, 224, 160, 0.4), rgba(255, 210, 140, 0.12) 55%, transparent 75%);
+  mix-blend-mode: screen;
+  animation: room-glow 5.2s ease-in-out infinite;
+}
+.gh__glassmask {
+  position: absolute;
+  pointer-events: none;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.gh__rain {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.gh__night {
+  position: absolute;
+  inset: 0;
+  z-index: 53;
+  pointer-events: none;
+  background: #050b12;
+  opacity: calc(var(--night) * 0.85);
+  transition: opacity 1.6s;
+}
+.gh__lamp {
+  position: absolute;
+  z-index: 60;
+  width: 22%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(255, 178, 86, 0.6) 0, rgba(255, 150, 60, 0.22) 32%, transparent 66%);
+  mix-blend-mode: screen;
+  opacity: calc(var(--lamp) + var(--boost, 0) * 0.14);
+  transition: opacity 1.8s;
+}
+.gh__taleglow {
+  position: absolute;
+  z-index: 37;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: scale(2.2);
+  background: radial-gradient(ellipse at center, rgba(255, 222, 150, 0.55), rgba(255, 200, 120, 0.16) 55%, transparent 75%);
+  mix-blend-mode: screen;
+  animation: room-glow 5.2s ease-in-out infinite;
+}
+/* the glaze of the moon jar catches the light when it is touched: a bright band that crosses it once */
+.gh__shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 250, 235, 0.85) 48%, transparent 66%);
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  animation: gh-shimmer 1.5s ease-out forwards;
+}
+@keyframes gh-shimmer {
+  to {
+    background-position: -30% 0;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gh__pglow,
+  .gh__taleglow,
+  .gh__lamp {
+    animation: none;
+  }
+}
+
+/* ---- weather on the glass: the lightning, kept soft because it is on glass and not on the whole room ---- */
+.gh__glassmask .room__flash.is-on {
+  animation: gh-flash 1.1s ease-out;
+}
+@keyframes gh-flash {
+  0% { opacity: 0; }
+  6% { opacity: 0.5; }
+  14% { opacity: 0.1; }
+  22% { opacity: 0.42; }
+  60%, 100% { opacity: 0; }
+}
+
+/* smoked glass: a slight, even darkening of the panes, a little more at the top and the bottom, and a faint cool reflection of the room's own light */
+.gh__smoke {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 70% 12%, rgba(176, 206, 226, 0.06), transparent 70%),
+    linear-gradient(180deg, rgba(5, 13, 17, 0.26), rgba(5, 13, 17, 0.12) 45%, rgba(5, 13, 17, 0.2));
+}

@@ -14,8 +14,7 @@
     "placeholders": "node scripts/make-placeholders.mjs"
   },
   "dependencies": {
-    "@fontsource/cormorant-garamond": "^5.3.0",
-    "@fontsource/inter": "^5.3.0",
+    "@fontsource/urbanist": "^5.3.0",
     "@react-three/fiber": "^9.8.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

@@ -15,6 +15,10 @@ import { PageView } from "../components/PageView";
 import { SealedPage } from "../components/SealedPage";
 import { TopBar } from "../components/TopBar";
 import { VideoPlayer } from "../components/VideoPlayer";
+import { GlasshouseRoom } from "../room/GlasshouseRoom";
+import { ListeningRoom, type RoomHandle } from "../room/ListeningRoom";
+import { RoomOverlay } from "../room/RoomOverlay";
+import { TaleBook } from "../room/TaleBook";
 import { WallOverlay } from "../wall/WallOverlay";
 import { WallPlate, type WallPlateHandle } from "../wall/WallPlate";
 import { content, fill, ui, unlockState, type Chapter, type Hotspot } from "../content";
@@ -51,8 +55,15 @@ export function Book({ route }: { route: Route }) {
   // The library is a wide picture of the whole wall (src/wall) when it is built in and 3D is on; the 3D shelf is the fallback.
   const [wallFailed, setWallFailed] = useState(false);
   const [wallLoaded, setWallLoaded] = useState(false);
-  const wall = scene3d && __HAS_WALL__ && !wallFailed;
-  const [focusN, setFocusN] = useState<number | null>(use3d && __HAS_WALL__ ? initial : null);
+  // On this branch the default library is the listening room (src/room); ?library=wall brings back v1's bookcase wall.
+  const useRoom = useMemo(() => new URLSearchParams(route.search).get("library") !== "wall", [route.search]);
+  const wall = scene3d && (useRoom || (__HAS_WALL__ && !wallFailed));
+  const [focusN, setFocusN] = useState<number | null>(use3d && (useRoom || __HAS_WALL__) ? initial : null);
+  const roomRef = useRef<RoomHandle>(null);
+  // The room is the layered glasshouse when it has been built; ?room=svg shows the earlier flat vector room instead.
+  const glasshouse = useMemo(() => __HAS_GLASSHOUSE__ && new URLSearchParams(route.search).get("room") !== "svg", [route.search]);
+  const Room = (glasshouse ? GlasshouseRoom : ListeningRoom) as typeof ListeningRoom;
+  const [taleOpen, setTaleOpen] = useState(false);
   const [patchN, setPatchN] = useState<number | null>(null);
   const [bookDown, setBookDown] = useState(false);
   const [zoomedOut, setZoomedOut] = useState(false);
@@ -81,7 +92,7 @@ export function Book({ route }: { route: Route }) {
   const pointer = useRef<{ x: number; y: number; t: number } | null>(null);
   const pageRef = useRef(-1);
   const wantPage = useRef(route.page ?? 0);
-  const overlayOpen = sheet !== null || video !== null;
+  const overlayOpen = sheet !== null || video !== null || taleOpen;
 
   const chapter = chapterIdx !== null ? content.chapters[chapterIdx]! : null;
   const unlock = chapter ? unlockState(chapter, route.preview) : null;
@@ -139,10 +150,12 @@ export function Book({ route }: { route: Route }) {
     fireSound.current?.set(sound && chapterIdx === null);
   }, [sound, chapterIdx]);
   const toggleSound = useCallback(() => {
+    // The room owns its own sound (rain, the record, the jar), so it is switched there; the label follows via onSoundChange.
+    if (useRoom) return roomRef.current?.toggleSound();
     fireSound.current ??= new FireSound();
     fireSound.current.unlock(); // inside the tap, while the browser allows audio to start
     setSound((s) => !s);
-  }, []);
+  }, [useRoom]);
 
   const onSettled = useCallback(() => {
     window.clearTimeout(turnGuard.current);
@@ -307,7 +320,24 @@ export function Book({ route }: { route: Route }) {
 
   return (
     <div ref={bookRef} className="book" data-mode={chapter && page >= 0 ? chapter.theme.mode : "ink"} data-3d={scene3d && sceneReady ? "on" : "off"} style={style}>
-      {wall && (
+      {wall && useRoom && (
+        <Room
+          ref={roomRef}
+          size={wallSize}
+          books={shelfBooks}
+          labels={shelfLabels}
+          busy={turning || !sceneReady || chapterIdx !== null}
+          focusN={focusN}
+          paused={bookDown || taleOpen}
+          reduceMotion={reduceMotion}
+          onPick={openBook}
+          onFocused={onFocused}
+          onLoaded={() => setWallLoaded(true)}
+          onSoundChange={setSound}
+          onOpenTale={() => setTaleOpen(true)}
+        />
+      )}
+      {wall && !useRoom && (
         <WallPlate
           ref={plateRef}
           size={wallSize}
@@ -352,7 +382,7 @@ export function Book({ route }: { route: Route }) {
         {!chapter ? (
           scene3d ? (
             wall ? (
-              wallLoaded && <WallOverlay sound={sound} onSound={toggleSound} zoomedOut={zoomedOut} onZoom={() => plateRef.current?.toggleZoom()} />
+              wallLoaded && (useRoom ? <RoomOverlay sound={sound} onSound={toggleSound} /> : <WallOverlay sound={sound} onSound={toggleSound} zoomedOut={zoomedOut} onZoom={() => plateRef.current?.toggleZoom()} />)
             ) : (
               <LibraryOverlay rects={sceneReady ? rects : []} labels={shelfLabels} busy={turning} sound={sound} onSound={toggleSound} onOpen={openBook} />
             )
@@ -380,6 +410,7 @@ export function Book({ route }: { route: Route }) {
         ) : null}
       </div>
 
+      {taleOpen && <TaleBook onClose={() => setTaleOpen(false)} onTurn={() => roomRef.current?.pageTurn()} />}
       {sheet && (
         <HotspotSheet chapter={sheet.chapter} hotspot={sheet.hotspot} onClose={closeSheet} onPlay={() => openVideo(sheet.chapter, sheet.hotspot.videoAt ?? 0)} />
       )}
