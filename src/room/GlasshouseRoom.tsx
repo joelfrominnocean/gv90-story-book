@@ -3,6 +3,9 @@ import type { ShelfBookSpec } from "../book3d/shelf";
 import { content, ui } from "../content";
 import { asset } from "../content/asset";
 import "../styles/room.css";
+import { BadukBoard } from "./baduk/BadukBoard";
+import { BadukTable } from "./baduk/BadukTable";
+import { useBaduk } from "./baduk/useBaduk";
 import { GlassRain } from "./GlassRain";
 import manifestJson from "./glasshouse.manifest.json";
 import { paletteFor } from "./palette";
@@ -26,7 +29,7 @@ interface Layer {
   z: number;
   kind: "sky" | "floor" | "object" | "mask" | "frame" | "platter" | "arm";
   state?: "late" | "dusk" | "night";
-  interact?: "jar" | "sleeve" | "tale";
+  interact?: "jar" | "sleeve" | "tale" | "baduk";
   hit?: Box | null;
   pivot?: [number, number];
 }
@@ -38,7 +41,9 @@ interface Manifest {
   lamp: { u: number; v: number };
   home: { u: number; v: number };
   /** Places the opening pan visits and that words appear near (fractions of the frame). */
-  focus?: Record<"book" | "record" | "screen" | "jar" | "moon", { u: number; v: number }>;
+  focus?: Record<"book" | "record" | "screen" | "jar" | "moon" | "table", { u: number; v: number }>;
+  /** Where the top of the Baduk board lands on the frame (far left, far right, near right, near left), for the live game to be drawn onto. */
+  baduk?: { quad: [number, number][] };
 }
 const MAN = manifestJson as unknown as Manifest;
 
@@ -55,6 +60,7 @@ interface Props {
   onLoaded: () => void;
   onSoundChange: (on: boolean) => void;
   onOpenTale: () => void;
+  onOverviewChange?: (on: boolean) => void;
 }
 
 const SEEN_KEY = "gv90.room.seen";
@@ -87,6 +93,7 @@ const ARM_REST = MAN.tt.armRest ?? 82;
 const ARM_PLAY = MAN.tt.armPlay ?? 131;
 const SQUASH = MAN.tt.squash ?? 0.59;
 const DEG_PER_SEC = 200; // 33 1/3 rpm
+const BOARD_PX = 360; // the size the board is drawn at before it is warped onto the table
 
 const boxStyle = (b: Box): CSSProperties => ({ left: `${b[0] * 100}%`, top: `${b[1] * 100}%`, width: `${(b[2] - b[0]) * 100}%`, height: `${(b[3] - b[1]) * 100}%` });
 /** A box inside another box, as percentages of the outer one. */
@@ -102,7 +109,7 @@ const union = (...bs: (Box | undefined | null)[]): Box | null => {
 };
 
 export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseRoom(
-  { size, books, labels, busy, focusN, paused, reduceMotion, onPick, onFocused, onLoaded, onSoundChange, onOpenTale },
+  { size, books, labels, busy, focusN, paused, reduceMotion, onPick, onFocused, onLoaded, onSoundChange, onOpenTale, onOverviewChange },
   ref,
 ) {
   const sceneEl = useRef<HTMLDivElement>(null);
@@ -121,6 +128,8 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
   const [track, setTrack] = useState(0);
   const [shimmer, setShimmer] = useState(0);
   const [visible, setVisible] = useState(() => !document.hidden);
+  const [gameOpen, setGameOpen] = useState(false);
+  const baduk = useBaduk((_colour, taken) => audio.current?.stone(taken > 0));
   const [seen, setSeen] = useState<number[]>(loadSeen);
   const [taleSeen, setTaleSeen] = useState(() => load(TALE_KEY) === "1");
 
@@ -148,8 +157,8 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
   }, []);
 
   /* ---- words only when you come near: the screen and the book each say one quiet thing as the view arrives, then go ---- */
-  const [cap, setCap] = useState<"screen" | "tale" | null>(null);
-  const nearRef = useRef<"screen" | "tale" | null>(null);
+  const [cap, setCap] = useState<"screen" | "tale" | "baduk" | null>(null);
+  const nearRef = useRef<"screen" | "tale" | "baduk" | null>(null);
   const capTimer = useRef(0);
   const armed = useRef(false);
   const checkNear = useCallback((x: number) => {
@@ -159,7 +168,11 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
     const centre = (g.vw / 2 - x) / g.sceneW; // the fraction of the scene that is in the middle of the screen
     const r = Math.max(70, g.vw * 0.2);
     const dist = (u: number) => Math.abs(centre - u) * g.sceneW;
-    const next = dist(F.screen.u) < r ? "screen" : dist(F.book.u) < r ? "tale" : null;
+    const near = ([["screen", F.screen.u], ["tale", F.book.u], ["baduk", F.table?.u ?? -9]] as const)
+      .map(([k, u]) => [k, dist(u)] as const)
+      .filter(([, d]) => d < r)
+      .sort((a, b) => a[1] - b[1])[0];
+    const next = near ? near[0] : null;
     if (next === nearRef.current) return;
     nearRef.current = next;
     window.clearTimeout(capTimer.current);
@@ -198,6 +211,26 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
     cancelAnimationFrame(inertia.current);
   }, []);
 
+  /* ---- the whole room: the scene is scaled to fit the width, in a wrapper, and eased in and out of that ---- */
+  const [overview, setOverview] = useState(false);
+  const overviewRef = useRef(false);
+  const zoomEl = useRef<HTMLDivElement>(null);
+  const setZoom = useCallback(
+    (tx: number, ty: number, k: number, animate: boolean) => {
+      const el = zoomEl.current;
+      if (!el) return;
+      el.style.transition = animate && !reduceMotion ? "transform 0.8s cubic-bezier(0.45, 0.05, 0.2, 1)" : "none";
+      el.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${k.toFixed(4)})`;
+    },
+    [reduceMotion],
+  );
+  /** The wrapper's transform that shows the whole scene, given where the scene itself is currently panned to (x). */
+  const wholeRoom = useCallback((x: number) => {
+    const g = geom.current;
+    const k = Math.min(1, g.vw / Math.max(1, g.sceneW));
+    return { tx: -k * x, ty: (g.vh - (g.sceneW / MAN.aspect) * k) / 2, k };
+  }, []);
+
   useEffect(() => {
     par.current = [...(sceneEl.current?.querySelectorAll<HTMLElement>("[data-par]") ?? [])].map((el) => [el, Number(el.dataset.par)]).filter(([, p]) => p !== 1) as [HTMLElement, number][];
     if (xRef.current !== null) apply(xRef.current);
@@ -206,6 +239,10 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
   useEffect(() => {
     geom.current = { vw: size.width, vh: size.height, sceneW };
     if (size.width === 0 || size.height === 0) return;
+    if (overviewRef.current) {
+      const w = wholeRoom(xRef.current ?? 0);
+      setZoom(w.tx, w.ty, w.k, false);
+    }
     const home = size.width / 2 - MAN.home.u * sceneW;
     if (xRef.current === null) {
       if (reduceMotion) return apply(home);
@@ -225,7 +262,7 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
   const drag = useRef<{ x: number; sx: number; vx: number; t: number; moved: boolean; id: number } | null>(null);
   const onPointerDown = (e: RPointerEvent) => {
     tourStop.current?.();
-    if (busy || focusN !== null) return;
+    if (busy || focusN !== null || overviewRef.current) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
     stop();
     drag.current = { x: e.clientX, sx: e.clientX, vx: 0, t: performance.now(), moved: false, id: e.pointerId };
@@ -265,6 +302,10 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
   };
   const onKeyDown = (e: React.KeyboardEvent) => {
     tourStop.current?.();
+    if (overviewRef.current) {
+      if (e.key === "Escape") leaveOverview();
+      return;
+    }
     if (e.key === "ArrowLeft") apply((xRef.current ?? 0) + 120);
     else if (e.key === "ArrowRight") apply((xRef.current ?? 0) - 120);
     else return;
@@ -331,6 +372,11 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
     a.ring();
     setShimmer((n) => n + 1);
   };
+  const onBaduk = () => {
+    const a = ensure();
+    a.unlock(); // a tap: the click of the stones can sound if the room's sound is on
+    setGameOpen(true);
+  };
   const onTale = () => {
     setTaleSeen(true);
     save(TALE_KEY, "1");
@@ -344,9 +390,33 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
       return next;
     });
 
+  const enterOverview = () => {
+    stop();
+    tourStop.current?.();
+    const { tx, ty, k } = wholeRoom(xRef.current ?? 0);
+    overviewRef.current = true;
+    setOverview(true);
+    setZoom(tx, ty, k, true);
+  };
+  /** Back in: to wherever you tapped in the whole-room view (u, a fraction of its width), or to where you were. */
+  const leaveOverview = (u?: number) => {
+    const g = geom.current;
+    const target = u === undefined ? (xRef.current ?? 0) : Math.min(0, Math.max(g.vw - g.sceneW, g.vw / 2 - u * g.sceneW));
+    apply(target); // the picture goes where you pointed, under the wrapper...
+    const { tx, ty, k } = wholeRoom(target);
+    setZoom(tx, ty, k, false); // ...which still shows the whole room around that spot
+    void zoomEl.current?.offsetWidth;
+    setZoom(0, 0, 1, true); // and eases in to it
+    overviewRef.current = false;
+    setOverview(false);
+  };
+  const toggleOverview = () => (overviewRef.current ? leaveOverview() : gameOpen ? undefined : enterOverview());
+  useEffect(() => onOverviewChange?.(overview), [overview, onOverviewChange]);
+
   useImperativeHandle(
     ref,
     () => ({
+      toggleOverview,
       pageTurn: () => audio.current?.pageTurn(),
       toggleSound: () => {
         const a = ensure();
@@ -360,7 +430,8 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
         onSoundChange(on);
       },
     }),
-    [ensure, onSoundChange],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ensure, onSoundChange, gameOpen],
   );
 
   /* ---- the opening pan: once, without a word, the view drifts to the folding screen, then to the book, then home ---- */
@@ -487,7 +558,7 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
     const padY = (u[3] - u[1]) * 0.18;
     return [u[0] - padX, u[1] - padY, u[2] + padX, u[3] + padY] as Box;
   })();
-  const inert = busy || focusN !== null;
+  const inert = busy || focusN !== null || gameOpen || overview;
   const vars = { "--lamp": pal.lamp, "--night": pal.night } as CSSProperties;
   const px = (b: Box) => ({ w: (b[2] - b[0]) * sceneW, h: (b[3] - b[1]) * sceneH });
 
@@ -506,7 +577,14 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
         e.currentTarget.scrollTop = 0;
       }}
       onClickCapture={(e) => suppress.current && (e.stopPropagation(), e.preventDefault())}
+      onClick={(e) => {
+        if (!overviewRef.current) return;
+        const r = e.currentTarget.getBoundingClientRect();
+        leaveOverview(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)));
+      }}
+      data-overview={overview}
     >
+      <div ref={zoomEl} className="gh__zoom">
       <div ref={sceneEl} className="room__scene" style={{ width: sceneW, height: sceneH }}>
         {MAN.layers.map((l) => {
           if (l.kind === "mask") return null; // the glass mask is not drawn: it only shapes the rain
@@ -544,19 +622,19 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
           }
           const style: CSSProperties = { ...boxStyle(l.box), zIndex: l.z };
           if (l.kind === "sky") style.opacity = skyWeight[l.state ?? "dusk"];
-          const label = l.interact === "jar" ? ui("roomJar").text : l.interact === "sleeve" ? ui("roomNextRecord").text : l.interact === "tale" ? content.meta.tale?.title.text : null;
+          const label = l.interact === "jar" ? ui("roomJar").text : l.interact === "sleeve" ? ui("roomNextRecord").text : l.interact === "tale" ? content.meta.tale?.title.text : l.interact === "baduk" ? ui("roomCapBaduk").text : null;
           return (
             <div key={l.id} className={`gh__layer gh__${l.kind}`} data-par={l.par} data-id={l.id} style={style}>
               <img src={asset(l.src)} alt="" draggable={false} />
               {l.interact === "jar" && shimmer > 0 && <span key={shimmer} className="gh__shimmer" style={{ WebkitMaskImage: `url(${asset(l.src)})`, maskImage: `url(${asset(l.src)})` }} aria-hidden="true" />}
-              {(l.interact === "jar" || l.interact === "sleeve" || l.interact === "tale") && l.hit && (
+              {(l.interact === "jar" || l.interact === "sleeve" || l.interact === "tale" || l.interact === "baduk") && l.hit && (
                 <button
                   type="button"
                   className="room__btn gh__hit"
                   style={inside(l.hit, l.box)}
                   aria-label={label ?? ""}
                   inert={inert}
-                  onClick={l.interact === "jar" ? onJar : l.interact === "sleeve" ? onSleeve : onTale}
+                  onClick={l.interact === "jar" ? onJar : l.interact === "sleeve" ? onSleeve : l.interact === "baduk" ? onBaduk : onTale}
                 />
               )}
             </div>
@@ -567,6 +645,15 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
         {ttHit && (
           <div className="gh__layer" style={{ ...boxStyle(ttHit), zIndex: 21 }}>
             <button type="button" className="room__btn room__btn--hint gh__hit" data-playing={playing} style={{ inset: 0, width: "100%", height: "100%" }} inert={inert} aria-label={(playing ? ui("roomPause") : ui("roomPlay")).text ?? ""} aria-pressed={playing} onClick={onTurntable} />
+          </div>
+        )}
+
+        {/* the game on the coffee table, drawn from the live state and warped onto the top of the board: you can watch the stones go down */}
+        {MAN.baduk && (
+          <div className="gh__layer gh__goboard" style={{ left: 0, top: 0, width: "100%", height: "100%", zIndex: 29 }} aria-hidden="true">
+            <div style={{ position: "absolute", left: 0, top: 0, width: BOARD_PX, height: BOARD_PX, transformOrigin: "0 0", transform: quadMatrix(BOARD_PX, BOARD_PX, MAN.baduk.quad.map(([u, v]) => [u * sceneW, v * sceneH]) as [number, number][]) }}>
+              <BadukBoard game={baduk.game} mode="table" />
+            </div>
           </div>
         )}
 
@@ -606,7 +693,7 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
         {glass && (
           <div className="gh__glassmask" style={{ ...boxStyle(glass.box), zIndex: 51, WebkitMaskImage: `url(${asset(glass.src)})`, maskImage: `url(${asset(glass.src)})` }} aria-hidden="true">
             <div className="gh__smoke" />
-            <GlassRain width={px(glass.box).w} height={px(glass.box).h} active={live && !reduceMotion} />
+            <GlassRain width={px(glass.box).w} height={px(glass.box).h} active={live && !reduceMotion && !gameOpen} />
             <div ref={flashEl} className="room__flash" />
           </div>
         )}
@@ -614,6 +701,7 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
         <div className="gh__lamp" style={{ left: `${MAN.lamp.u * 100}%`, top: `${MAN.lamp.v * 100}%`, "--boost": playing ? 1 : 0 } as CSSProperties} aria-hidden="true" />
         {!taleSeen && byId.get("book")?.hit && <span className="gh__taleglow" style={boxStyle(byId.get("book")!.hit!)} aria-hidden="true" />}
         <span hidden data-track={track} />
+      </div>
       </div>
       <span className="room__vignette" aria-hidden="true" />
       {/* one slot for words, so that nothing can overlap: what you have come near (one at a time), and the record that is playing */}
@@ -625,11 +713,16 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
           <em>{content.meta.tale?.title.text}</em>
           <span>{ui("roomCapTaleSub").text}</span>
         </p>
+        <p className="gh__cap gh__cap--tale" data-on={cap === "baduk" && !inert}>
+          <em>{ui("roomCapBaduk").text}</em>
+          <span>{ui("roomCapBadukSub").text}</span>
+        </p>
         <p className="gh__now" data-on={playing && !inert}>
           {tracks[track]?.title}
         </p>
       </div>
       <span className="room__dim" data-on={focusN !== null} aria-hidden="true" />
+      {gameOpen && <BadukTable state={baduk} onClose={() => setGameOpen(false)} />}
     </div>
   );
 });

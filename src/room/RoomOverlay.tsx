@@ -6,6 +6,9 @@ import { content, ui } from "../content";
 interface Props {
   sound: boolean;
   onSound: () => void;
+  /** The whole room is showing (zoomed out). */
+  overview: boolean;
+  onOverview: () => void;
 }
 
 /**
@@ -14,7 +17,7 @@ interface Props {
  * switch is a small icon, not a word: the sound is for you to find at the turntable. Everything else the room has to say, it says
  * itself, near the thing it is about.
  */
-export function RoomOverlay({ sound, onSound }: Props) {
+export function RoomOverlay({ sound, onSound, overview, onOverview }: Props) {
   const debug = useDebug();
   const [intro, setIntro] = useState(true);
   useEffect(() => {
@@ -27,6 +30,7 @@ export function RoomOverlay({ sound, onSound }: Props) {
     };
   }, []);
   const label = (sound ? ui("soundOn") : ui("soundOff")).text ?? "";
+  const zoomLabel = (overview ? ui("roomZoomIn") : ui("roomZoomOut")).text ?? "";
   return (
     <section className="library library--3d library--wall library--room" data-intro={intro} aria-label={content.meta.bookTitle.text ?? undefined}>
       <header className="library__head">
@@ -45,6 +49,13 @@ export function RoomOverlay({ sound, onSound }: Props) {
           ) : (
             <path d="M15.2 9.6l4.4 4.8M19.6 9.6l-4.4 4.8" />
           )}
+        </svg>
+      </button>
+      <button type="button" className="library__sound room-zoom" aria-pressed={overview} aria-label={zoomLabel} title={zoomLabel} onClick={onOverview}>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="5.8" />
+          <path d="M15 15l5 5" />
+          <path d={overview ? "M8 10.5h5M10.5 8v5" : "M8 10.5h5"} />
         </svg>
       </button>
       <p className="library__note">

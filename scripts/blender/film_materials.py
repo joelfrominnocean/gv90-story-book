@@ -390,7 +390,7 @@ def lampshade(name, col, strength=2.0):
 
 # which recipe a material name gets (anything not listed is a plain satin material in its colour)
 _ROLE = {
-    "timber": ("walnut", {}), "timber_dark": ("walnut", dict(rough=0.4)), "desk": ("walnut", dict(rough=0.46)),
+    "timber": ("walnut", {}), "kaya": ("walnut", dict(rough=0.5, grain=14.0, bump=0.06)), "timber_dark": ("walnut", dict(rough=0.4)), "desk": ("walnut", dict(rough=0.46)),
     "chair": ("linen", {}), "rug": ("wool", {}), "stone": ("stone", {}), "floor": ("floor", {}), "floor2": ("floor", dict(rough=0.3)),
     "porcelain": ("ceramic", {}), "brass": ("brass", {}), "frame": ("bronze", {}), "terracotta": ("ceramic", dict(rough=0.35, crackle=False)),
     "leaf": ("leaf", {}), "leaf_dark": ("leaf", {}), "leaf_light": ("leaf", {}), "red": ("ceramic", dict(rough=0.45, crackle=False)),

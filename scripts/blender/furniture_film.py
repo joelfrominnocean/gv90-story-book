@@ -124,3 +124,22 @@ def leafy(name, centre, radii, n, size, mat, c=None, droop=0.3, seed=0, flatten=
         p_.use_smooth = False
     ob = bpy.data.objects.new(name, me)
     return link(ob, c or C_SOFT)
+
+def film_coffee_table(centre, yaw):
+    """A low walnut table on slim tapered legs, with a pale wooden Baduk board resting on it and a lidded stone bowl at each side.
+    Returns the four world-space corners of the board's top, which the page draws the live game onto."""
+    wal, wal_d = M["timber"], M["timber_dark"]
+    ct = empty("coffee_table", (centre[0], centre[1], 0.0), (0, 0, yaw))
+    soft_box("ct_top", (0.78, 0.78, 0.04), (0, 0, 0.4), wal, C_INK, parent=ct, bevel=0.006, segs=2)
+    box("ct_apron", (0.7, 0.7, 0.055), (0, 0, 0.352), wal_d, C_INK, parent=ct)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            cyl("ct_leg", 0.014, 0.027, 0.38, (sx * 0.33, sy * 0.33, 0.19), wal_d, C_INK, rot=(sy * math.radians(3), -sx * math.radians(3), 0), parent=ct, seg=12)
+    kaya = toon("kaya", _lin("#9A7F55"))
+    soft_box("ct_board", (0.5, 0.5, 0.035), (0, 0, 0.4375), kaya, C_INK, parent=ct, bevel=0.004, segs=2)
+    bowl = [(0.0, 0.0), (0.034, 0.0), (0.052, 0.012), (0.061, 0.038), (0.058, 0.06), (0.032, 0.074), (0.016, 0.083), (0.0, 0.086)]
+    for sx in (-1, 1):
+        lathe("ct_bowl", bowl, (sx * 0.33, 0.0, 0.42), 1.0, wal_d, parent=ct)
+    bpy.context.view_layer.update()
+    z = 0.455
+    return [ct.matrix_world @ Vector((lx, ly, z)) for lx, ly in ((-0.25, 0.25), (0.25, 0.25), (0.25, -0.25), (-0.25, -0.25))]

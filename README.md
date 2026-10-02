@@ -148,6 +148,19 @@ data and nothing here is final:
     screen, so labels cannot overlap. While a record plays its title sits in the same slot. The book is the tap target for the tale (it glows faintly until first opened). On a first
     visit the view also drifts, wordlessly, to the screen, then the book, then home (`?tour=1` plays it again, `?tour=0` never; any touch ends it). No counters, no "locked" wording.
     All of that copy is `generated` in `content.json`.
+  - **Zoom out (a small magnifier icon beside the sound icon):** shows the whole room at once, scaled to fit the width with the dark of the room around it (in a portrait phone the
+    room is a wide strip, in landscape it nearly fills the screen). While it is showing, nothing in the room is touchable; tap anywhere to zoom back in to that spot, or press the icon
+    again (back to where you were) or Escape. The scene sits in a wrapper (`.gh__zoom`) whose transform is eased between "whole room" and none; the parallax and the pan are untouched.
+  - **A game of Baduk (Go) on the coffee table** (`src/room/baduk/`): a low walnut table in front of the armchair, a pale wooden board and a lidded stone bowl at each
+    side (all in the Blender scene, `film_coffee_table`). The live game is drawn onto the top of the board in the room, warped onto its projected corners
+    (`manifest.baduk.quad`), so you can see stones go down while you look around. Tapping the table opens the board from above, on walnut, with the room dimmed behind.
+    You play black on a 9x9 board; touch and slide to aim (the stone shows where it will go) and lift to place it; a mouse hovers and clicks; the arrow keys and Enter work too.
+    Real rules (`engine.ts`): captures, no suicide, the simple ko rule, passing, and two passes end the game. The opponent (`ai.ts`) is gentle: it scores every legal move on what
+    a beginner learns first (take, save, do not self-atari, third and fourth lines, stay near the last move), keeps the best ten and tries each with 72 random games; about a
+    fifth of a second a move, with a deliberate human-sized pause on top. **No score, no clock, no result is ever shown**: when you both pass, the board says "The game rests."
+    The game is kept in the browser (the moves after the opening), so it is there, mid-game, next visit; "New game" starts again from an opening position.
+    Stones click softly on wood (synthesised, follows the Sound switch). Words: coming near the table says "A game of Baduk" and its Hangul name 바둑 (generated; a
+    Korean speaker should check it).
   - **Rain** (`GlassRain.tsx`): sparse falling streaks at three distances (short, slow and faint far away; a few long ones near), plus small beads and a few runners that
     join, at 0.6 of the pixels and 30 fps, only while the tab is visible and no book is open. The room pauses when hidden while the audio carries on, and the Media Session
     controls (play, pause, next, previous) are set.

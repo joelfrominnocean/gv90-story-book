@@ -78,6 +78,7 @@ export function Book({ route }: { route: Route }) {
   const [video, setVideo] = useState<{ chapter: Chapter; at: number } | null>(null);
   const [rects, setRects] = useState<Rect[]>([]);
   const [sound, setSound] = useState(false);
+  const [overview, setOverview] = useState(false);
   const fireSound = useRef<FireSound | null>(null);
 
   const bookRef = useRef<HTMLDivElement>(null);
@@ -335,6 +336,7 @@ export function Book({ route }: { route: Route }) {
           onLoaded={() => setWallLoaded(true)}
           onSoundChange={setSound}
           onOpenTale={() => setTaleOpen(true)}
+          onOverviewChange={setOverview}
         />
       )}
       {wall && !useRoom && (
@@ -382,7 +384,7 @@ export function Book({ route }: { route: Route }) {
         {!chapter ? (
           scene3d ? (
             wall ? (
-              wallLoaded && (useRoom ? <RoomOverlay sound={sound} onSound={toggleSound} /> : <WallOverlay sound={sound} onSound={toggleSound} zoomedOut={zoomedOut} onZoom={() => plateRef.current?.toggleZoom()} />)
+              wallLoaded && (useRoom ? <RoomOverlay sound={sound} onSound={toggleSound} overview={overview} onOverview={() => roomRef.current?.toggleOverview?.()} /> : <WallOverlay sound={sound} onSound={toggleSound} zoomedOut={zoomedOut} onZoom={() => plateRef.current?.toggleZoom()} />)
             ) : (
               <LibraryOverlay rects={sceneReady ? rects : []} labels={shelfLabels} busy={turning} sound={sound} onSound={toggleSound} onOpen={openBook} />
             )

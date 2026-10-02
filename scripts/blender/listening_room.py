@@ -792,6 +792,22 @@ else:
         box("armpost", (0.05, 0.05, 0.22), (sx * 0.34, -0.22, 0.5), M["timber"], C_INK, parent=chair)
         for sy in (-1, 1):
             cyl("chair_leg", 0.026, 0.014, 0.4, (sx * 0.26, sy * 0.24, 0.2), M["timber"], C_INK, rot=(sy * math.radians(8), sx * math.radians(-8), 0), parent=chair, seg=10)
+# ---------------------------------------------------------------- a low table in front of the chair, with a game of Baduk on it
+begin("coffee")
+_chair_fwd = Vector((math.sin(math.radians(-40)), -math.cos(math.radians(-40)), 0))   # the way the armchair faces
+CT_CENTRE = Vector((chair.location.x, chair.location.y, 0)) + _chair_fwd * 0.98
+if STYLE == "film":
+    GO_TOP = film_coffee_table(CT_CENTRE, math.radians(-40))
+else:
+    _ct = empty("coffee_table", (CT_CENTRE.x, CT_CENTRE.y, 0), (0, 0, math.radians(-40)))
+    box("ct_top", (0.78, 0.78, 0.04), (0, 0, 0.4), M["timber"], C_INK, parent=_ct)
+    for _sx in (-1, 1):
+        for _sy in (-1, 1):
+            cyl("ct_leg", 0.014, 0.027, 0.38, (_sx * 0.33, _sy * 0.33, 0.19), M["timber_dark"], C_INK, parent=_ct, seg=10)
+    box("ct_board", (0.5, 0.5, 0.035), (0, 0, 0.4375), toon("kaya", (0.78, 0.62, 0.36)), C_INK, parent=_ct)
+    bpy.context.view_layer.update()
+    GO_TOP = [_ct.matrix_world @ Vector((lx, ly, 0.455)) for lx, ly in ((-0.25, 0.25), (0.25, 0.25), (0.25, -0.25), (-0.25, -0.25))]
+
 begin("tea")
 TBL = (-0.5, 1.95)
 cyl("stone_table", 0.31, 0.25, 0.46, (TBL[0], TBL[1], 0.23), M["stone"], C_INK, seg=32)

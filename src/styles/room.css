@@ -609,3 +609,145 @@
     radial-gradient(ellipse 60% 40% at 70% 12%, rgba(176, 206, 226, 0.06), transparent 70%),
     linear-gradient(180deg, rgba(5, 13, 17, 0.26), rgba(5, 13, 17, 0.12) 45%, rgba(5, 13, 17, 0.2));
 }
+
+/* ============ The game of Baduk on the coffee table ============ */
+.baduk {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+}
+.baduk--play:focus-visible {
+  outline: 1px solid rgba(239, 230, 210, 0.5);
+  outline-offset: 6px;
+}
+.baduk--table {
+  pointer-events: none;
+}
+.baduk__stone--new {
+  animation: baduk-drop 0.24s var(--ease-out, ease-out) both;
+}
+@keyframes baduk-drop {
+  from {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.gh__goboard {
+  pointer-events: none;
+}
+.baduk-table {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: calc(3.4rem + env(safe-area-inset-top, 0px)) var(--gutter) calc(1.1rem + env(safe-area-inset-bottom, 0px));
+  background: radial-gradient(ellipse at 50% 44%, rgba(9, 15, 20, 0.8), rgba(4, 8, 11, 0.95));
+  animation: baduk-in 0.5s ease both;
+  touch-action: none;
+}
+@keyframes baduk-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.baduk-table__wood {
+  width: min(100%, 58vh, 30rem);
+  aspect-ratio: 1;
+  padding: 2.6%;
+  background: linear-gradient(135deg, #3b291d, #271a12);
+  border-radius: 5px;
+  box-shadow: 0 34px 60px -24px rgba(0, 0, 0, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.045);
+}
+.baduk-table__wood .baduk {
+  filter: brightness(0.9) saturate(0.88);
+}
+.baduk-table__top {
+  height: 0.9rem;
+  display: grid;
+  place-items: center;
+}
+.baduk-table__top i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e6dfcd;
+  opacity: 0;
+}
+.baduk-table__top[data-thinking="true"] i {
+  animation: baduk-think 1.5s ease-in-out infinite;
+}
+@keyframes baduk-think {
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.15);
+  }
+}
+.baduk-table__rests {
+  margin: 0;
+  height: 1.2rem;
+  font: italic 400 0.95rem/1.2 var(--serif, "Urbanist", sans-serif);
+  color: rgba(239, 230, 210, 0.7);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.baduk-table__rests[data-on="true"] {
+  opacity: 1;
+}
+.baduk-table__bar {
+  display: flex;
+  gap: 0.4rem;
+}
+.baduk-table__bar button {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.9rem;
+  border: 0;
+  background: none;
+  font: 500 0.625rem/1 var(--sans, "Urbanist", sans-serif);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(239, 230, 210, 0.62);
+}
+.baduk-table__bar button:hover:not(:disabled),
+.baduk-table__bar button:focus-visible {
+  color: #efe6d2;
+}
+.baduk-table__bar button:disabled {
+  opacity: 0.3;
+}
+
+/* ---- the whole-room view: the scene sits in a wrapper that scales it to fit the width, with the dark of the room around it ---- */
+.gh__zoom {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.room[data-overview="true"] {
+  cursor: zoom-in;
+}
+.library--room .room-zoom {
+  right: calc(var(--gutter) - 0.7rem + 2.5rem);
+}

@@ -346,6 +346,54 @@
         "text": "Folded into a screen",
         "source": "generated",
         "ref": "Listening room (v2 scamp): second line of the caption plate over the folding screen"
+      },
+      "roomCapBaduk": {
+        "text": "A game of Baduk",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): caption when you come near the coffee table, and the name of the board for assistive technology"
+      },
+      "roomCapBadukSub": {
+        "text": "바둑",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): the Korean name of the game (Baduk, known in English as Go), second line of the coffee-table caption. Hangul: a native speaker should check it.",
+        "flags": [
+          "verify-before-use"
+        ]
+      },
+      "badukPass": {
+        "text": "Pass",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): the game of Baduk on the coffee table, the button to pass a turn"
+      },
+      "badukNew": {
+        "text": "New game",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): the game of Baduk on the coffee table, the button to begin again"
+      },
+      "badukRests": {
+        "text": "The game rests.",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): shown when both players have passed; no score, no winner is ever shown"
+      },
+      "badukBlack": {
+        "text": "Black",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): spoken to screen readers, with a point on the board, for the move just played"
+      },
+      "badukWhite": {
+        "text": "White",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): spoken to screen readers, with a point on the board, for the move just played"
+      },
+      "roomZoomOut": {
+        "text": "See the whole room",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): the label (for assistive technology and the tooltip) of the small zoom-out icon in the corner"
+      },
+      "roomZoomIn": {
+        "text": "Look closer",
+        "source": "generated",
+        "ref": "Listening room (v2 scamp): the label of the same icon while the whole room is showing"
       }
     }
   },

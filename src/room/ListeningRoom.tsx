@@ -13,6 +13,8 @@ export interface RoomHandle {
   toggleSound: () => void;
   /** The sound of a page turning (the folk tale calls it). */
   pageTurn: () => void;
+  /** Zoom out to see the whole room, or back in (the layered room only). */
+  toggleOverview?: () => void;
 }
 
 interface Props {
@@ -33,6 +35,8 @@ interface Props {
   onSoundChange: (on: boolean) => void;
   /** The open book on the credenza was picked: the folk tale. */
   onOpenTale: () => void;
+  /** Told whenever the whole-room view is entered or left (the layered room only). */
+  onOverviewChange?: (on: boolean) => void;
 }
 
 const SEEN_KEY = "gv90.room.seen";

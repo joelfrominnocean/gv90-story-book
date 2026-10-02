@@ -281,6 +281,7 @@ OBJECTS = [
     ("book", ["book"], 25, 1.0, "tale"),
     ("jar", ["jar"], 26, 1.0, "jar"),
     ("chair", ["chair"], 28, 1.0, None),
+    ("coffee", ["coffee"], 29, 1.0, "baduk"),
     ("camellia", ["camellia"], 30, 1.0, None),
     ("desk", ["desk"], 34, 1.1, None),
     ("fern_front", ["fern_front"], 40, 1.15, None),
@@ -480,12 +481,20 @@ MAN["home"] = {"u": round(cv.x, 5), "v": round(1 - cv.y, 5)}
 def _at(world):
     q = proj(world)
     return {"u": round(q.x, 5), "v": round(1 - q.y, 5)}
+# the Baduk board on the coffee table: the four corners of its top as they land on the frame, ordered far-left, far-right, near-right, near-left,
+# so that the page can warp the live game onto it
+_pts = [proj(c) for c in GO_TOP]
+_far = sorted(sorted(_pts, key=lambda p_: -p_.y)[:2], key=lambda p_: p_.x)    # larger y is higher in the picture
+_near = sorted(sorted(_pts, key=lambda p_: -p_.y)[2:], key=lambda p_: p_.x)
+MAN["baduk"] = {"quad": [[round(p_.x, 5), round(1 - p_.y, 5)] for p_ in (_far[0], _far[1], _near[1], _near[0])]}
+_gc = sum(GO_TOP, Vector((0, 0, 0))) / 4
 MAN["focus"] = {
     "book": _at(bk.matrix_world.translation + Vector((0, 0, 0.1))),
     "record": _at(ttw),
     "screen": _at(screen.matrix_world @ Vector((0, 0, 1.2))),
     "jar": _at(Vector((1.35, 1.5, 0.55))),
     "moon": _at(_CAM0 + sky_dir(9.0, 15.0) * 300.0),
+    "table": _at(_gc),
 }
 # where the two caption plates hang: over the book, and over the top of the screen
 MAN["plates"] = {

@@ -90,7 +90,7 @@ function heuristic(g: Game, i: number, colour: Colour, r: { board: Uint8Array; t
 }
 
 /** The opponent's move for `colour`: a point, or -1 for a pass. Takes a moment, in small steps, so the page never stalls. */
-export async function chooseMove(g: Game, colour: Colour, playouts = 36, keep = 8): Promise<number> {
+export async function chooseMove(g: Game, colour: Colour, playouts = 72, keep = 10): Promise<number> {
   const n = g.n;
   const cands: Candidate[] = [];
   for (let i = 0; i < n * n; i++) {

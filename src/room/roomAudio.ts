@@ -299,6 +299,34 @@ export class RoomAudio {
     });
   }
 
+  /**
+   * A Baduk stone set down on a wooden board: a short, dry click (noise through a band-pass) over a low wooden body. Quiet, never a note.
+   * It follows the Sound switch like the rest of the room; with a capture the stone lands a little harder.
+   */
+  stone(captured = false): void {
+    const ctx = this.ctx;
+    if (!ctx || !this.noise || !this.sound) return;
+    const t = ctx.currentTime;
+    const make = (type: BiquadFilterType, freq: number, q: number, peak: number, decay: number) => {
+      const src = ctx.createBufferSource();
+      src.buffer = this.noise;
+      const f = ctx.createBiquadFilter();
+      f.type = type;
+      f.frequency.value = freq * rand(0.93, 1.07);
+      f.Q.value = q;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(peak, t + 0.002);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+      src.connect(f).connect(g).connect(this.fxBus);
+      src.start(t, rand(0, 3));
+      src.stop(t + decay + 0.03);
+    };
+    const k = captured ? 1.35 : 1;
+    make("bandpass", 1900, 0.9, 0.2 * k, 0.06);
+    make("lowpass", 420, 0.6, 0.22 * k, 0.11);
+  }
+
   /** A page of paper turning: a soft swish that rises in pitch, and a small flap at the end. */
   pageTurn(): void {
     const ctx = this.ctx;
