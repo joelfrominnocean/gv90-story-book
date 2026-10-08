@@ -19,6 +19,8 @@ export default defineConfig({
     __HAS_FIRE_VIDEO__: JSON.stringify(has("public/assets/room/fire.mp4")),
     // The glasshouse listening room as layers (built by scripts/blender + scripts/make-glasshouse-assets.mjs).
     __HAS_GLASSHOUSE__: JSON.stringify(has("public/assets/room/glasshouse/frame.webp")),
+    // The same room as a vector scene pack (scripts/vector/pack.mjs). Small SVGs, so it is safe to publish; ?scene=vector shows it.
+    __HAS_VECTOR_SCENE__: JSON.stringify(has("public/assets/room/vector/frame.svg")),
   },
   plugins: [react()],
   server: { host: true, port: 5173, strictPort: true },

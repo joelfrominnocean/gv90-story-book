@@ -1,0 +1,469 @@
+/* ============ The screening: a chapter as a run of full-bleed scenes ============ */
+.screening {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  background: #06080a;
+  color: #efe6d2;
+  outline: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  animation: scr-in 0.8s ease both;
+}
+.screening[data-leaving="true"] {
+  animation: scr-out 0.45s ease both;
+}
+@keyframes scr-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scr-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* the pictures: every hero is stacked, the current one shows, the rest are faded out, so a change of picture is a dissolve */
+.scr__media {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.scr__media[data-on="true"] {
+  opacity: 1;
+}
+.scr__ambient {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(36px) brightness(0.46) saturate(1.15);
+  transform: scale(1.3);
+}
+.scr__frame {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38%;
+  width: 100%;
+  max-height: 100%;
+  transform: translateY(-50%);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 16%, #000 84%, transparent 100%);
+}
+.scr__frame[data-aspect="4:5"] {
+  top: 43%;
+  aspect-ratio: 4 / 5;
+}
+.scr__frame img,
+.scr__frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: 50% 56%;
+}
+.scr__media[data-on="true"]:not([data-still="true"]) .scr__frame img,
+.scr__media[data-on="true"]:not([data-still="true"]) .scr__frame video {
+  animation: scr-drift 26s ease-in-out infinite alternate;
+}
+@keyframes scr-drift {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(-1.2%, -0.9%, 0);
+  }
+}
+/* a missing picture is a dark frame lit from the chapter's accent, and says plainly that it is a placeholder */
+.scr__ph {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 36%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 70%),
+    linear-gradient(180deg, #0b1013, #05070a);
+}
+.scr__ph span,
+.scr__tag {
+  position: absolute;
+  left: var(--gutter, 1.25rem);
+  top: calc(3.7rem + env(safe-area-inset-top, 0px));
+  max-width: 72%;
+  font: 400 0.5625rem/1.35 var(--sans);
+  letter-spacing: 0.06em;
+  color: rgba(239, 230, 210, 0.46);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+.scr__ph b,
+.scr__tag b {
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-right: 0.4em;
+}
+/* copy that has not been supplied stays labelled, but quietly: small, no box */
+.screening .pending {
+  display: inline-block;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: 400 0.625rem/1.4 var(--sans);
+  letter-spacing: 0.06em;
+  color: rgba(239, 230, 210, 0.5);
+}
+.screening .pending b {
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.scr__ph--plate {
+  position: absolute;
+  inset: 0;
+}
+.scr__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(4, 7, 9, 0.5) 0, rgba(4, 7, 9, 0) 20%, rgba(4, 7, 9, 0) 40%, rgba(4, 7, 9, 0.8) 100%);
+  transition: background 0.9s ease;
+}
+.screening[data-kind="line"] .scr__scrim,
+.screening[data-kind="details"] .scr__scrim,
+.screening[data-kind="film"] .scr__scrim {
+  background: linear-gradient(180deg, rgba(4, 7, 9, 0.62), rgba(4, 7, 9, 0.5) 40%, rgba(4, 7, 9, 0.86));
+}
+.screening[data-kind="close"] .scr__scrim,
+.screening[data-kind="sealed"] .scr__scrim {
+  background: linear-gradient(180deg, rgba(4, 7, 9, 0.78), rgba(4, 7, 9, 0.9));
+}
+
+/* top: a way out, and the hairline that shows how far there is to go */
+.scr__bar {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--gutter, 1.25rem) - 0.7rem);
+  right: var(--gutter, 1.25rem);
+  top: calc(0.3rem + env(safe-area-inset-top, 0px));
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.scr__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgba(239, 230, 210, 0.7);
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.8));
+}
+.scr__close:hover,
+.scr__close:focus-visible {
+  color: #efe6d2;
+}
+.scr__progress {
+  flex: 1;
+  height: 1px;
+  background: rgba(239, 230, 210, 0.16);
+}
+.scr__progress i {
+  display: block;
+  width: var(--p);
+  height: 100%;
+  background: color-mix(in srgb, var(--accent) 70%, #efe6d2);
+  transition: width 0.7s ease;
+}
+
+/* the words: at the bottom, in the lower third, fading up */
+.scr__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.scr__stage > * {
+  pointer-events: auto;
+}
+.scr__title,
+.scr__line,
+.scr__sealed {
+  position: absolute;
+  left: var(--gutter, 1.25rem);
+  right: var(--gutter, 1.25rem);
+  bottom: calc(2.6rem + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  text-shadow: 0 1px 18px rgba(2, 5, 7, 0.9);
+}
+.scr__title > *,
+.scr__line > *,
+.scr__sealed > * {
+  animation: scr-up 1s var(--ease-out, ease-out) both;
+}
+.scr__title > :nth-child(2) {
+  animation-delay: 0.12s;
+}
+.scr__title > :nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes scr-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+.scr__eyebrow {
+  margin: 0 0 0.8rem;
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 55%, #efe6d2);
+}
+.scr__title h1,
+.scr__sealed h1 {
+  margin: 0;
+  font: 300 clamp(2.3rem, 11.5vw, 3.4rem) / 1.02 var(--serif);
+  letter-spacing: -0.012em;
+  max-width: 11ch;
+}
+.scr__epigraph {
+  margin: 1rem 0 0;
+  font: italic 400 1.05rem/1.35 var(--serif);
+  color: rgba(239, 230, 210, 0.82);
+  max-width: 26ch;
+}
+.scr__line p {
+  margin: 0;
+  font: 300 clamp(1.5rem, 6.8vw, 2.15rem) / 1.2 var(--serif);
+  letter-spacing: -0.006em;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+.scr__dbg,
+.scr__dbg2 {
+  display: block;
+  margin-top: 0.8rem;
+  font: 400 0.625rem/1.4 var(--sans);
+  letter-spacing: 0.04em;
+  color: rgba(239, 230, 210, 0.55);
+}
+.scr__dbg {
+  position: absolute;
+  left: var(--gutter, 1.25rem);
+  top: calc(3.4rem + env(safe-area-inset-top, 0px));
+  margin: 0;
+}
+
+/* the details: the picture framed in the middle, with its marks */
+.scr__plate {
+  position: absolute;
+  left: var(--gutter, 1.25rem);
+  right: var(--gutter, 1.25rem);
+  top: 50%;
+  aspect-ratio: var(--ar);
+  max-height: 72%;
+  transform: translateY(-50%);
+  box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9);
+  animation: scr-in 1s ease both;
+}
+.scr__plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.scr__mark {
+  position: absolute;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -1.375rem 0 0 -1.375rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: grid;
+  place-items: center;
+}
+.scr__mark i {
+  position: relative;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #efe6d2;
+  box-shadow: 0 0 0 1px rgba(4, 7, 9, 0.4);
+}
+.scr__mark i::after {
+  content: "";
+  position: absolute;
+  inset: -0.55rem;
+  border-radius: 50%;
+  border: 1px solid rgba(239, 230, 210, 0.6);
+  animation: scr-ping 3.4s ease-out infinite;
+}
+@keyframes scr-ping {
+  from {
+    opacity: 0.9;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+/* the film: one play mark in the middle */
+.scr__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 0;
+  background: none;
+  color: #efe6d2;
+  animation: scr-in 1s ease both;
+}
+.scr__play-ring {
+  position: relative;
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 50%;
+  border: 1px solid rgba(239, 230, 210, 0.7);
+}
+.scr__play-ring::after {
+  content: "";
+  position: absolute;
+  left: 52%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 0.6rem 0 0.6rem 0.95rem;
+  border-color: transparent transparent transparent #efe6d2;
+}
+.scr__play-label {
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(239, 230, 210, 0.8);
+}
+
+/* the close: the lamps, and the call to action, quiet */
+.scr__close-scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 2.4rem;
+  animation: scr-in 1.2s ease both;
+}
+.scr__cta-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.4rem;
+  font: 500 0.6875rem/1 var(--sans);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #efe6d2;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(239, 230, 210, 0.4);
+}
+.scr__cta-line--soon {
+  border-bottom: 0;
+  color: rgba(239, 230, 210, 0.6);
+}
+.scr__cta-line:hover,
+.scr__cta-line:focus-visible {
+  border-bottom-color: #efe6d2;
+}
+.scr__cta {
+  display: grid;
+  justify-items: center;
+}
+
+/* a chapter that has not arrived */
+.scr__sealed .lamps {
+  margin: 1.6rem 0 1.4rem;
+}
+.scr__teaser {
+  margin: 0;
+  font: italic 400 1.02rem/1.35 var(--serif);
+  color: rgba(239, 230, 210, 0.82);
+  max-width: 26ch;
+}
+.scr__opens {
+  margin: 1.4rem 0 0;
+  font: 500 0.625rem/1 var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(239, 230, 210, 0.6);
+}
+
+/* a small mark at the edge that says there is more, and nothing else does */
+.scr__more {
+  position: absolute;
+  z-index: 3;
+  right: calc(var(--gutter, 1.25rem) - 0.1rem);
+  bottom: calc(1.3rem + env(safe-area-inset-bottom, 0px));
+  width: 0.55rem;
+  height: 0.55rem;
+  border-top: 1px solid rgba(239, 230, 210, 0.5);
+  border-right: 1px solid rgba(239, 230, 210, 0.5);
+  transform: rotate(45deg);
+  animation: scr-nudge 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes scr-nudge {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateX(0) rotate(45deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(4px) rotate(45deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .screening,
+  .scr__title > *,
+  .scr__line > *,
+  .scr__sealed > *,
+  .scr__plate,
+  .scr__play,
+  .scr__close-scene,
+  .scr__mark i::after,
+  .scr__more {
+    animation: none;
+  }
+  .scr__media,
+  .scr__progress i {
+    transition-duration: 0.01s;
+  }
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-320 0 2666 500" width="2666" height="500"><defs>
+  <linearGradient id="skynight-haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2C4FA3" stop-opacity="0"/><stop offset="1" stop-color="#4767ae" stop-opacity=".30"/></linearGradient>
+  <radialGradient id="skynight-moonHalo"><stop offset="0" stop-color="#EEE9DE" stop-opacity=".30"/><stop offset=".35" stop-color="#EEE9DE" stop-opacity=".10"/><stop offset="1" stop-color="#EEE9DE" stop-opacity="0"/></radialGradient>
+<linearGradient id="skynight-skynightG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0f28"/><stop offset=".5" stop-color="#151b50"/><stop offset="1" stop-color="#233a81"/></linearGradient>
+</defs><rect x="-320" y="0" width="2666" height="500" fill="url(#skynight-skynightG)"/>
+<rect x="-320" y="380" width="2666" height="120" fill="url(#skynight-haze)"/>
+<g fill-opacity="1"><circle cx="1174" cy="140" r="130" fill="url(#skynight-moonHalo)"/><circle cx="1174" cy="140" r="24" fill="#EEE9DE"/></g></svg>

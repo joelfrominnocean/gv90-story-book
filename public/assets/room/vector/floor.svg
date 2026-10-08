@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-120 500 2266 384" width="2266" height="384"><defs>
+  <linearGradient id="floor-floorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#362b54"/><stop offset=".45" stop-color="#2d244a"/><stop offset="1" stop-color="#231d3f"/></linearGradient>
+</defs><rect x="-120" y="500" width="2266" height="384" fill="url(#floor-floorG)"/></svg>

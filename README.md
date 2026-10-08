@@ -12,8 +12,10 @@ npm run dev          # http://localhost:5173, also on your LAN for a phone
 
 | Flag | Effect |
 | --- | --- |
-| _(none)_ | The library: one book per chapter. |
-| `?chapter=N` | Take book N (0–5) off the shelf and open it. Add `&page=M` (0-based) to open at a page. |
+| _(none)_ | The listening room. Each chapter is a poster on the folding screen; opening one starts its **screening** (see "Chapters as screenings" below). |
+| `?chapter=N` | Open chapter N (0–5) straight away (an eDM link). Add `&page=M` (0-based) to start at scene M. |
+| `?scene=3d` | The room as the Blender render instead of the vector scene (only where the render has been built; it is kept out of the public repo). `?scene=vector` is the default and needs no flag. See "The vector scene" below. |
+| `?format=book` | The earlier format: each chapter as a paged book (3D when available). Kept for comparison. `?library=wall` is the older bookcase wall. |
 | `?preview=all` | Ignore unlock dates (client review). Without it, chapters 2–5 show as sealed pages. |
 | `?debug=1` | Source badge on every string (tap it for ref, flags, notes), per-module direction, open flags, source links. |
 | `?3d=0` / `?3d=1` | Force the 2D book (crossfades) or the 3D book. Default: 3D, unless the reader prefers reduced motion, WebGL is missing, or the device looks low-powered. |
@@ -174,6 +176,16 @@ data and nothing here is final:
 - **Not built yet:** the illustrator's art (everything in the layers is a scamp), real field recordings, session-length tracking, a full-width layout on desktop,
   a lightning plate for the sky (the flash is a CSS overlay for now), more of the Seoul skyline as real art.
 - `?library=wall` shows v1's bookcase wall on this branch, for comparison.
+
+### The vector scene (`scripts/vector`, `public/assets/room/vector`) – the room's default art
+
+The room's art is a swappable pack: layers named in a manifest. The default is a **vector pack**, generated from code; the Blender render is the alternative at `?scene=3d` (and the vector pack is used on its own wherever the render is absent). Same ids, hit areas, poster quads and Baduk board quad as the 3D room, so every interaction works on it.
+
+- **Build it:** `node scripts/vector/pack.mjs` writes 27 small SVGs (about 146 KB in all) to `public/assets/room/vector/` and `src/room/glasshouse.vector.manifest.json`. The poster faces and the board's lines and stones are not drawn: the app draws them live over the quads.
+- **Preview it:** `node scripts/vector/panorama.mjs` writes the whole room as one SVG to `docs/style-frames/panorama-b-planes.svg`, with placeholder posters, a board grid and rain. `node scripts/vector/render.mjs <svgDir> <pngDir>` renders SVGs to PNG.
+- **How it is made:** `tokens.mjs` (the eight palette colours; hex values are proposals), `geom.mjs` (curves, the moon jar, leaf blades), `solid.mjs` (a tiny flat-shaded renderer: boxes and cylinders seen from one low camera, painted in three tones), `panorama.mjs` (the scene), `pack.mjs` (the export; it measures each layer's real extent in a headless browser). Needs `npm install` (it uses `culori`, and `playwright` with its Chromium).
+- **Motion:** the lines breathe and the leaves sway inside the SVGs themselves (CSS, off under reduced motion). The rain, the turning platter and the swinging tonearm are the app's.
+- **Not yet:** the late and dusk skies are rough, the tea set is not drawn, the three skies share one moon.
 
 ### The library wall (`src/wall`) – the default library
 

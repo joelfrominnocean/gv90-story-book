@@ -6,3 +6,4 @@ declare const __HAS_FIRE_TEXTURE__: boolean;
 declare const __HAS_WALL__: boolean;
 declare const __HAS_FIRE_VIDEO__: boolean;
 declare const __HAS_GLASSHOUSE__: boolean;
+declare const __HAS_VECTOR_SCENE__: boolean;

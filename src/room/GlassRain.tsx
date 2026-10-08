@@ -26,7 +26,7 @@ interface Drop {
  * run. It draws at half the pixels and 30 frames a second, only while `active`. The page puts it inside a mask shaped like the
  * glass that you can actually see, so it never lands on furniture or plants. A laptop fan should never come on because of it.
  */
-export function GlassRain({ width, height, active, fps = 30, quality = 0.6 }: { width: number; height: number; active: boolean; fps?: number; quality?: number }) {
+export function GlassRain({ width, height, active, fps = 30, quality = 0.6, dropScale = 1 }: { width: number; height: number; active: boolean; fps?: number; quality?: number; dropScale?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -38,6 +38,7 @@ export function GlassRain({ width, height, active, fps = 30, quality = 0.6 }: { 
     if (!ctx) return;
     ctx.scale(quality, quality);
     const k = height / 800;
+    const ds = dropScale; // how big a bead of water is, relative to the picture: a scene whose glass is far away wants small ones
     const SLANT = 0.2; // x travelled per y: the rain leans in the wind
     // ---- the weather outside: three depths of falling streaks
     const streaks: Streak[] = [];
@@ -57,7 +58,7 @@ export function GlassRain({ width, height, active, fps = 30, quality = 0.6 }: { 
     const MAX_RUN = 7;
     const spawn = () => {
       if (drops.length >= MAX) return;
-      drops.push({ x: Math.random() * width, y: Math.random() * height * 0.95, r: (1.3 + Math.random() * 1.4) * k, run: false, v: 0, wait: 0, from: 0, limit: (3.4 + Math.random() * 1.6) * k });
+      drops.push({ x: Math.random() * width, y: Math.random() * height * 0.95, r: (1.3 + Math.random() * 1.4) * k * ds, run: false, v: 0, wait: 0, from: 0, limit: (3.4 + Math.random() * 1.6) * k * ds });
     };
     for (let i = 0; i < MAX * 0.6; i++) spawn();
     let last = performance.now();
@@ -95,7 +96,9 @@ export function GlassRain({ width, height, active, fps = 30, quality = 0.6 }: { 
       for (let i = drops.length - 1; i >= 0; i--) {
         const d = drops[i]!;
         if (!d.run) {
-          d.r += dt * 0.16 * k;
+          // a bead grows to the size at which it would run, and no further: when every runner slot is taken it waits at that size
+          // (without this cap, beads kept swelling for as long as the page was open, and after a few minutes the glass was covered in rings)
+          d.r = Math.min(d.limit * 1.02, d.r + dt * 0.16 * k * ds);
           if (d.r > d.limit && runners < MAX_RUN && Math.random() < dt * 0.9) {
             d.run = true;
             runners++;
@@ -106,7 +109,7 @@ export function GlassRain({ width, height, active, fps = 30, quality = 0.6 }: { 
           d.wait -= dt;
           if (d.wait <= 0) {
             d.y += d.v * dt;
-            d.r = Math.max(1.8 * k, d.r - dt * 0.06 * k);
+            d.r = Math.max(1.8 * k * ds, d.r - dt * 0.06 * k * ds);
             if (Math.random() < dt * 0.6) {
               d.wait = 0.5 + Math.random() * 1.8;
               d.v = (10 + Math.random() * 28) * k;
@@ -128,7 +131,7 @@ export function GlassRain({ width, height, active, fps = 30, quality = 0.6 }: { 
           const b = drops[j]!;
           if (b === a || b.run) continue;
           if (Math.hypot(a.x - b.x, a.y - b.y) < (a.r + b.r) * 0.9) {
-            a.r = Math.min(5 * k, Math.sqrt(a.r * a.r + b.r * b.r));
+            a.r = Math.min(5 * k * ds, Math.sqrt(a.r * a.r + b.r * b.r));
             a.v *= 1.12;
             drops.splice(j, 1);
           }
@@ -151,7 +154,7 @@ export function GlassRain({ width, height, active, fps = 30, quality = 0.6 }: { 
       cancelAnimationFrame(id);
       ctx.clearRect(0, 0, width, height);
     };
-  }, [width, height, active, fps, quality]);
+  }, [width, height, active, fps, quality, dropScale]);
 
   return <canvas ref={ref} className="gh__rain" style={{ width, height }} aria-hidden="true" />;
 }

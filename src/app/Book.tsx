@@ -61,7 +61,7 @@ export function Book({ route }: { route: Route }) {
   const [focusN, setFocusN] = useState<number | null>(use3d && (useRoom || __HAS_WALL__) ? initial : null);
   const roomRef = useRef<RoomHandle>(null);
   // The room is the layered glasshouse when it has been built; ?room=svg shows the earlier flat vector room instead.
-  const glasshouse = useMemo(() => __HAS_GLASSHOUSE__ && new URLSearchParams(route.search).get("room") !== "svg", [route.search]);
+  const glasshouse = useMemo(() => (__HAS_GLASSHOUSE__ || __HAS_VECTOR_SCENE__) && new URLSearchParams(route.search).get("room") !== "svg", [route.search]);
   const Room = (glasshouse ? GlasshouseRoom : ListeningRoom) as typeof ListeningRoom;
   const [taleOpen, setTaleOpen] = useState(false);
   const [patchN, setPatchN] = useState<number | null>(null);

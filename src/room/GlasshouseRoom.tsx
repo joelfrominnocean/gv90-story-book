@@ -8,6 +8,7 @@ import { BadukTable } from "./baduk/BadukTable";
 import { useBaduk } from "./baduk/useBaduk";
 import { GlassRain } from "./GlassRain";
 import manifestJson from "./glasshouse.manifest.json";
+import vectorManifestJson from "./glasshouse.vector.manifest.json";
 import { paletteFor } from "./palette";
 import { POSTER_H, POSTER_W, PosterFace, quadMatrix } from "./PosterFace";
 import { RoomAudio, tracks } from "./roomAudio";
@@ -40,12 +41,21 @@ interface Manifest {
   tt: { squash?: number; armPlay?: number; armRest?: number };
   lamp: { u: number; v: number };
   home: { u: number; v: number };
+  /** How the weather is drawn on this scene's glass (the vector scene's glass is far off, so its drops are small). */
+  rain?: { dropScale?: number };
   /** Places the opening pan visits and that words appear near (fractions of the frame). */
   focus?: Record<"book" | "record" | "screen" | "jar" | "moon" | "table", { u: number; v: number }>;
   /** Where the top of the Baduk board lands on the frame (far left, far right, near right, near left), for the live game to be drawn onto. */
   baduk?: { quad: [number, number][] };
 }
-const MAN = manifestJson as unknown as Manifest;
+/**
+ * Which set of pictures the room is made of: the vector scene pack (scripts/vector/pack.mjs), which is the default, or the Blender
+ * render (`?scene=3d`, when it has been built). `?scene=vector` still works and means the default. Where only one of the two exists
+ * (the public build has no render), that one is used. The pack follows the same schema, so nothing else in this file knows which it is drawing.
+ */
+const sceneParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("scene") : null;
+const useVector = __HAS_VECTOR_SCENE__ && (sceneParam !== "3d" || !__HAS_GLASSHOUSE__);
+const MAN = (useVector ? vectorManifestJson : manifestJson) as unknown as Manifest;
 
 interface Props {
   size: { width: number; height: number };
@@ -693,7 +703,7 @@ export const GlasshouseRoom = forwardRef<RoomHandle, Props>(function GlasshouseR
         {glass && (
           <div className="gh__glassmask" style={{ ...boxStyle(glass.box), zIndex: 51, WebkitMaskImage: `url(${asset(glass.src)})`, maskImage: `url(${asset(glass.src)})` }} aria-hidden="true">
             <div className="gh__smoke" />
-            <GlassRain width={px(glass.box).w} height={px(glass.box).h} active={live && !reduceMotion && !gameOpen} />
+            <GlassRain width={px(glass.box).w} height={px(glass.box).h} active={live && !reduceMotion && !gameOpen} dropScale={MAN.rain?.dropScale ?? 1} />
             <div ref={flashEl} className="room__flash" />
           </div>
         )}

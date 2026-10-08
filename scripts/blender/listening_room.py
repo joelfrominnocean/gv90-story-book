@@ -27,6 +27,7 @@ CAMX = float(os.environ.get("CX", "-2.0"))
 CAMY = float(os.environ.get("CY", "-3.2"))
 CAMZ = float(os.environ.get("CZ", "1.15"))
 TGTX = float(os.environ.get("TX", "0.9"))
+TGTY = float(os.environ.get("TY", "4.4"))
 TGTZ = float(os.environ.get("TZ", "1.0"))
 # STYLE=film (the current direction): physically based, procedural materials (walnut, linen, stone, ceramic, brass), soft filmic light,
 # no outlines and no halftone; see film_materials.py.
@@ -758,10 +759,21 @@ decal("lamp_reflection", (0.7, 3.2), (-0.32, 1.45, 0.021), (1.0, 0.72, 0.4), 1.5
 # ---------------------------------------------------------------- the moon jar (on the floor, beside the credenza)
 def moon_jar(center, scale):
     prof = [(0.0, 0.0), (0.046, 0.0), (0.052, 0.008), (0.048, 0.016), (0.074, 0.03), (0.106, 0.07), (0.126, 0.125), (0.131, 0.178), (0.12, 0.236), (0.094, 0.286), (0.066, 0.318), (0.06, 0.336), (0.067, 0.35), (0.07, 0.357), (0.063, 0.359)]
+    if STYLE == "film" and os.environ.get("JARSMOOTH", "1") == "1":
+        def _cr(p0, p1, p2, p3, t):
+            return tuple(0.5 * ((2 * p1[i]) + (-p0[i] + p2[i]) * t + (2 * p0[i] - 5 * p1[i] + 4 * p2[i] - p3[i]) * t * t + (-p0[i] + 3 * p1[i] - 3 * p2[i] + p3[i]) * t ** 3) for i in range(2))
+        pts = [prof[0]] + list(prof) + [prof[-1]]
+        sm = []
+        for i in range(1, len(pts) - 2):
+            for k in range(10):
+                q = _cr(pts[i - 1], pts[i], pts[i + 1], pts[i + 2], k / 10)
+                sm.append((max(0.0, q[0]), q[1]))
+        sm.append(prof[-1])
+        prof = sm
     bm = bmesh.new()
     vs = [bm.verts.new((r, 0, z)) for r, z in prof]
     es = [bm.edges.new((vs[i], vs[i + 1])) for i in range(len(vs) - 1)]
-    bmesh.ops.spin(bm, geom=vs + es, cent=(0, 0, 0), axis=(0, 0, 1), angle=2 * math.pi, steps=64, use_merge=True)
+    bmesh.ops.spin(bm, geom=vs + es, cent=(0, 0, 0), axis=(0, 0, 1), angle=2 * math.pi, steps=96 if STYLE == "film" else 64, use_merge=True)
     bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     me = bpy.data.meshes.new("jar")
@@ -776,7 +788,7 @@ def moon_jar(center, scale):
     return link(ob, C_INK)
 
 begin("jar")
-box("jar_plinth", (0.46, 0.46, 0.3), (1.35, 1.5, 0.15), M["stone"], C_INK)
+(soft_box if STYLE == "film" and os.environ.get("PLINTH", "1") == "1" else box)("jar_plinth", (0.46, 0.46, 0.3), (1.35, 1.5, 0.15), M["stone"], C_INK, **({"bevel": 0.012, "segs": 3} if STYLE == "film" and os.environ.get("PLINTH", "1") == "1" else {}))
 moon_jar((1.35, 1.5, 0.3), 1.5)
 
 # ---------------------------------------------------------------- armchair, a stone table, tea
@@ -1168,7 +1180,7 @@ link(cl, C_SKY)
 
 # ---- one faint moon, a placeholder for the sky states: a plain flat disc facing the camera, no glow, no craters, no sun
 _CAM0 = Vector((CAMX, CAMY, CAMZ))
-_TGT0 = Vector((TGTX, 4.4, TGTZ))
+_TGT0 = Vector((TGTX, TGTY, TGTZ))
 _FWD0 = (_TGT0 - _CAM0).normalized()
 
 def sky_dir(yaw_deg, elev_deg):
@@ -1244,6 +1256,17 @@ if STYLE == "film":
         if hasattr(sc.eevee, attr):
             setattr(sc.eevee, attr, val)
 
+if os.environ.get("HERO"):
+    hk = bpy.data.lights.new("herokey", "AREA")
+    hk.energy = float(os.environ.get("HEROKEY", "260"))
+    hk.size = 1.4
+    hk.color = (1.0, 0.86, 0.68)
+    hk.specular_factor = 0.8
+    hko = bpy.data.objects.new("herokey", hk)
+    hko.location = (0.2, 0.2, 1.7)
+    hko.rotation_euler = (math.radians(55), math.radians(8), math.radians(-12))
+    sc.collection.objects.link(hko)
+
 cam = bpy.data.cameras.new("cam")
 cam.lens = float(os.environ.get("LENS", "18" if LAYERS else "22"))
 cam.sensor_fit = "HORIZONTAL"
@@ -1256,7 +1279,7 @@ co.location = (CAMX, CAMY, CAMZ)
 sc.collection.objects.link(co)
 sc.camera = co
 tgt = bpy.data.objects.new("target", None)
-tgt.location = (TGTX, 4.4, TGTZ)
+tgt.location = (TGTX, TGTY, TGTZ)
 sc.collection.objects.link(tgt)
 tr = co.constraints.new("TRACK_TO")
 tr.target = tgt

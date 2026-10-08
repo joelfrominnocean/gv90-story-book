@@ -575,13 +575,14 @@
       "heroes": [
         {
           "status": "placeholder",
-          "src": null,
-          "assetName": "Chapter 1 hero – Moon Jar (procedural 3D arrives in Phase 3)",
+          "src": "/assets/room/heroes/ch1-moon-jar.webp",
+          "assetName": "Chapter 1 hero · stand-in render, the real hero replaces it",
           "alt": {
-            "text": "Placeholder frame for the Moon Jar hero",
+            "text": "A white moon jar on a stone plinth, in a dim room with rain on the windows",
             "source": "generated"
           },
-          "aspect": "4:5"
+          "aspect": "4:5",
+          "note": "Stand-in render (Blender, film style) so the first full chapter has a picture. Not product imagery; replace with the supplied hero."
         }
       ],
       "modules": [
